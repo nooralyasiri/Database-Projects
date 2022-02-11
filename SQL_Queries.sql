@@ -1,6 +1,7 @@
 /*Train table*/
 Create Table Train
-  (T_number       INT         NOTNULL,
+  (
+   T_number       INT         NOTNULL,
    T_name         VARCHAR(15) NOTNULL,
    T_source       VARCHAR(15) NOTNULL,
    T_destination  VARCHAR(15) NOTNULL,
@@ -14,7 +15,8 @@ Create Table Train
 
 /*Passenger table*/
 Create Table Passenger
-  (P_name      VARCHAR(15) NOTNULL,
+  (
+   P_name      VARCHAR(15) NOTNULL,
    P_age       INT         NOTNULL,
    P_address   VARCHAR(15) NOTNULL,
    P_status    VARCHAR(1)  NOTNULL,
@@ -23,3 +25,14 @@ Create Table Passenger
    UNIQUE(),
    FOREIGN KEY(), REFERENCES());
   )
+
+/* Train Status */
+Create Table Train_Status
+(
+   S_date      DATE    NOTNULL,
+   S_nSeats    INT     NOTNULL,
+   S_nOccupied INT     NOTNULL,
+   PRIMARY KEY(),
+   UNIQUE(),
+   FOREIGN KEY(), REFERENCES());
+)
