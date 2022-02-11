@@ -26,6 +26,18 @@ Create Table Passenger
    FOREIGN KEY(), REFERENCES());
   )
 
+/* Ticket */
+Create Table Ticket
+  (
+    Ti_P    DOUBLE(1,1)   NOTNULL,
+    Ti_g    DOUBLE(1,1)   NOTNULL,
+    Ti_max  INT           
+    Ti_wait INT
+    PRIMARY KEY(),
+    UNIQUE(),
+    FOREIGN KEY(), REFERENCES());
+  )
+
 /* Train Status */
 Create Table Train_Status
 (
