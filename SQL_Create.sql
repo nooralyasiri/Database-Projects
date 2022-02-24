@@ -33,9 +33,9 @@ CREATE TABLE Passenger
  );
 
 /* PASSENGER DATA */
-  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("James	Butt",53,"6649 N Blue Gum St, New Orleans",264816896);
-  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Josephine	Darakjy",46,"4 B Blue Ridge Blvd, Brighton",240471168);
-  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Art	Venere",39,"8 W Cerritos Ave #54, Bridgeport",285200976);
+  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("James Butt",53,"6649 N Blue Gum St, New Orleans",264816896);
+  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Josephine Darakjy",46,"4 B Blue Ridge Blvd, Brighton",240471168);
+  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Art Venere",39,"8 W Cerritos Ave #54, Bridgeport",285200976);
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Lenna	Paprocki",43,"639 Main St, Anchorage",309323096);
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Donette	Foller",31,"34 Center St, Hamilton",272610795);
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Simona Morasca",27,"3 Mcauley Dr, Ashland",250951162);
