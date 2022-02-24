@@ -74,10 +74,10 @@ CREATE TABLE TrainStatus
 CREATE INDEX [IFK_StatusOfTrain] ON [Train] ([TrainName]);
 
 /* TRAIN STATUS DATA */
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(19/02/2022,"Orient Express",10,10,0,0);
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(20/02/2022,"Flying Scottsman",8,5,2,5);
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Guwahati Express",7,6,3,4);
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Golden Chariot",6,3,4,7);
+INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(19/02/2022,"Orient Express",10,10,0,0);
+INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(20/02/2022,"Flying Scottsman",8,5,2,5);
+INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Guwahati Express",7,6,3,4);
+INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Golden Chariot",6,3,4,7);
 
 
 /* ========================================================================================= */
@@ -90,7 +90,6 @@ CREATE TABLE Ticket
     [TrainNumber]    INTEGER       NOT NULL,
     [TicketType]     VARCHAR(10)   NOT NULL,
     [TicketStatus]   VARCHAR(10)   NOT NULL,
-    PRIMARY KEY([TicketType]),
     FOREIGN KEY([TrainNumber]) REFERENCES [Train] ([TrainNumber])
     ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY([PassengerSSN]) REFERENCES [Passenger] ([PassengerSSN])
