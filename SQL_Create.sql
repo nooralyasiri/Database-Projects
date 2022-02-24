@@ -1,40 +1,17 @@
-
-/* Train Status */
-Create Table TrainStatus
- (
-   TrainDate           DATE           NOTNULL,
-   TrainName           VARCHAR(50)    NOTNULL,
-   PremSeatsOpen       INT            NOTNULL,
-   GenSeatsOpen        INT            NOTNULL,
-   PremSeatsOccupied   INT            NOTNULL,
-   GenSeatsOccupied    INT            NOTNULL,
-   PRIMARY KEY(),
-   UNIQUE(),
-   FOREIGN KEY(), REFERENCES()
- );
-
-/*data for train status*/
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(19/02/2022,"Orient Express",10,10,0,0)
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(20/02/2022,"Flying Scottsman",8,5,2,5)
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Guwahati Express",7,6,3,4)
-INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Golden Chariot",6,3,4,7)
-
-/* Train table */
-Create Table Train
+/* TRAIN TABLE */
+CREATE TABLE Train
   (
-   TrainNumber       INT         NOTNULL,
-   TrainName         VARCHAR(15) NOTNULL,
-   TrainSource       VARCHAR(15) NOTNULL,
-   TrainDestination  VARCHAR(15) NOTNULL,
-   PremiumFare       INT
-   GeneralFare       INT
-   Schedule          VARCHAR(50)
-   PRIMARY KEY(),
-   UNIQUE(),
-   FOREIGN KEY(), REFERENCES()
+   [TrainNumber]       INTEGER      NOTNULL,
+   [TrainName]         NVARCHAR(15) NOTNULL,
+   [TrainSource]       NVARCHAR(15) NOTNULL,
+   [TrainDestination]  NVARCHAR(15) NOTNULL,
+   [PremiumFare]       INTEGER,
+   [GeneralFare]       INTEGER,
+   [Schedule]          NVARCHAR(50),
+   PRIMARY KEY([TrainName], [TrainNumber])
   );
 
-/*data for train */
+/* TRAIN DATA */
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(1,"Orient Express","Paris","Istanbul",800,600,"Weekdays")
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(2,"Flying Scotsman","Edinburgh","London",4000,3500,"Friday,Saturday,Sunday")
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(3,"Golden Arrow","Victoria","Dover",980,860,"Monday,Tuesday,Wednesday")
@@ -42,20 +19,22 @@ Create Table Train
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(5,"Maharaja Express","Delhi","Mumbai",5980,4510,"Wednesday,Thursday,Friday")
 
 
+/* ========================================================================================= */
 
-/*Passenger table*/
-Create Table Passenger
+
+/* PASSENGER TABLE */
+CREATE TABLE Passenger
   (
-   PassengerName      VARCHAR(30)  NOTNULL,
-   PassengerAge       INT          NOTNULL,
-   PassengerAddress   VARCHAR(100) NOTNULL,
-   PassengerSSN       INT(9)       NOTNULL,
-   PRIMARY KEY(),
+   [PassengerName]      NVARCHAR(30)  NOTNULL,
+   [PassengerAge]       INTEGER       NOTNULL,
+   [PassengerAddress]   NVARCHAR(100) NOTNULL,
+   [PassengerSSN]       INTEGER(9)    NOTNULL,
+   PRIMARY KEY([PassengerSSN]),
    UNIQUE(),
    FOREIGN KEY(), REFERENCES()
  );
 
-/*data for Passenger */
+/* PASSENGER DATA */
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("James	Butt",53,"6649 N Blue Gum St, New Orleans",264816896)
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Josephine	Darakjy",46,"4 B Blue Ridge Blvd, Brighton",240471168)
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Art	Venere",39,"8 W Cerritos Ave #54, Bridgeport",285200976)
@@ -78,20 +57,48 @@ Create Table Passenger
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Fletcher	Flosi",60,"394 Manchester Blvd, Rockford",317434088)
 
 
+/* ========================================================================================= */
 
-/* Ticket */
-Create Table Ticket
+
+/* TRAIN STATUS TABLE */
+CREATE TABLE TrainStatus
+ (
+   [TrainDate]           DATE           NOTNULL,
+   [TrainName]           NVARCHAR(50)   NOTNULL,
+   [PremSeatsOpen]       INTEGER        NOTNULL,
+   [GenSeatsOpen]        INTEGER        NOTNULL,
+   [PremSeatsOccupied]   INTEGER        NOTNULL,
+   [GenSeatsOccupied]    INTEGER        NOTNULL,
+   PRIMARY KEY([TrainNumber]),
+   FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
+   ON DELETE NO ACTION ON UPDATE NO ACTION
+ );
+
+/* TRAIN STATUS DATA */
+INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(19/02/2022,"Orient Express",10,10,0,0)
+INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(20/02/2022,"Flying Scottsman",8,5,2,5)
+INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Guwahati Express",7,6,3,4)
+INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Golden Chariot",6,3,4,7)
+
+
+/* ========================================================================================= */
+
+
+/* TICKET TABLE */
+CREATE TABLE Ticket
   (
-    PassengerSSN   INT(9)        NOTNULL,
-    TrainNumber    INT   NOTNULL,
-    TicketType     VARCHAR(10)   NOTNULL,
-    TicketStatus   VARCHAR(10)  NOTNULL,
+    [PassengerSSN]   INTEGER(9)    NOTNULL,
+    [TrainNumber]    INTEGER       NOTNULL,
+    [TicketType]     NVARCHAR(10)  NOTNULL,
+    [TicketStatus]   NVARCHAR(10)  NOTNULL,
     PRIMARY KEY(),
-    UNIQUE(),
-    FOREIGN KEY(), REFERENCES()
+    FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY([PassengerSSN]) REFERENCES [Passenger] ([PassengerSSN])
+    ON DELETE NO ACTION ON UPDATE NO ACTION
   );
 
-/*data for Ticket */
+/* TICKET DATA */
    INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(264816896,3,"Premium","Booked")
    INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(240471168,2,"General","Booked")
    INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(285200976,4,"Premium","Booked")
