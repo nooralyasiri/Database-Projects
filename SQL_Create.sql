@@ -37,8 +37,7 @@ CREATE TABLE TrainStatus
    FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
    ON DELETE NO ACTION ON UPDATE NO ACTION
  );
-CREATE INDEX [IFK_StatusOfTrain] ON [Train] ([TrainName]);
-
+ 
 
 /* TICKET TABLE */
 CREATE TABLE Ticket
