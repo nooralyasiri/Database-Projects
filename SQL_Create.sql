@@ -37,7 +37,7 @@ CREATE TABLE TrainStatus
    FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
    ON DELETE NO ACTION ON UPDATE NO ACTION
  );
- 
+
 
 /* TICKET TABLE */
 CREATE TABLE Ticket
@@ -85,12 +85,13 @@ CREATE INDEX [IFK_PassengerTicket] ON [Passenger] ([PassengerSSN]);
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Gladys Rim",30,"322 New Horizon Blvd, Milwaukee",286411536);
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Yuki Whobrey",36,"1 State Route 27, Taylor",294860856);
   INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("Fletcher Flosi",60,"394 Manchester Blvd, Rockford",317434088);
-  
+  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("James Butto",41,"6699 N Green Gum St, New York",123456789);
+  INSERT INTO [Passenger]([PassengerName],[PassengerAge],[PassengerAddress],[PassengerSSN]) VALUES("James Buttom",41,"699 N Green Gum St, New York",987654321);
   
 
 /* TRAIN DATA */
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(1,"Orient Express","Paris","Istanbul",800,600,"Weekdays");
-  INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(2,"Flying Scotsman","Edinburgh","London",4000,3500,"Friday,Saturday,Sunday");
+  INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(2,"Flying Scottsman","Edinburgh","London",4000,3500,"Friday,Saturday,Sunday");
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(3,"Golden Arrow","Victoria","Dover",980,860,"Monday,Tuesday,Wednesday");
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(4,"Golden Chariot","Bangalore","Goa",4300,3800,"Saturday,Sunday");
   INSERT INTO [Train]([TrainNumber],[TrainName],[TrainSource],[TrainDestination],[PremiumFare],[GeneralFare],[Schedule]) VALUES(5,"Maharaja Express","Delhi","Mumbai",5980,4510,"Wednesday,Thursday,Friday");
@@ -98,11 +99,11 @@ CREATE INDEX [IFK_PassengerTicket] ON [Passenger] ([PassengerSSN]);
   
   
 /* TRAIN STATUS DATA */
-  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(19/02/2022,"Orient Express",10,10,0,0);
-  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(20/02/2022,"Flying Scottsman",8,5,2,5);
-  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Guwahati Express",7,6,3,4);
-  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(21/02/2022,"Golden Chariot",6,3,4,7);
-  
+  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES("2022-02-19","Orient Express",10,10,0,0);
+  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES("2022-02-20","Flying Scottsman",8,5,2,5);
+  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES("2022-02-21","Golden Chariot",6,3,4,7);
+  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES("2022-02-21","Golden Arrow",7,6,3,4);
+  INSERT INTO [TrainStatus]([TrainDate],[TrainName],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES("2022-02-21","Maharaja Express",10,10,0,0);
   
   
 /* TICKET DATA */
@@ -131,3 +132,5 @@ CREATE INDEX [IFK_PassengerTicket] ON [Passenger] ([PassengerSSN]);
    INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(277292710,4,"General","Booked");
    INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(331160133,4,"General","Booked");
    INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(331293204,4,"General","Booked");
+   INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(123456789,4,"General","Booked");
+   INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(987654321,4,"General","Waitlist");
