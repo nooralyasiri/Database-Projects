@@ -30,8 +30,7 @@ CREATE TABLE Passenger
    [PassengerAddress]   NVARCHAR(100) NOTNULL,
    [PassengerSSN]       INTEGER(9)    NOTNULL,
    PRIMARY KEY([PassengerSSN]),
-   UNIQUE(),
-   FOREIGN KEY(), REFERENCES()
+   UNIQUE([PassengerSSN])
  );
 
 /* PASSENGER DATA */
