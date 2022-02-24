@@ -1,10 +1,10 @@
 /* TRAIN TABLE */
 CREATE TABLE Train
   (
-   [TrainNumber]       INTEGER      NOTNULL,
-   [TrainName]         VARCHAR(15) NOTNULL,
-   [TrainSource]       VARCHAR(15) NOTNULL,
-   [TrainDestination]  VARCHAR(15) NOTNULL,
+   [TrainNumber]       INTEGER      NOT NULL,
+   [TrainName]         VARCHAR(15)  NOT NULL,
+   [TrainSource]       VARCHAR(15)  NOT NULL,
+   [TrainDestination]  VARCHAR(15)  NOT NULL,
    [PremiumFare]       INTEGER,
    [GeneralFare]       INTEGER,
    [Schedule]          VARCHAR(50),
@@ -25,10 +25,10 @@ CREATE TABLE Train
 /* PASSENGER TABLE */
 CREATE TABLE Passenger
   (
-   [PassengerName]      VARCHAR(30)  NOTNULL,
-   [PassengerAge]       INTEGER       NOTNULL,
-   [PassengerAddress]   VARCHAR(100) NOTNULL,
-   [PassengerSSN]       INTEGER(9)    NOTNULL,
+   [PassengerName]      VARCHAR(30)   NOT NULL,
+   [PassengerAge]       INTEGER       NOT NULL,
+   [PassengerAddress]   VARCHAR(100)  NOT NULL,
+   [PassengerSSN]       INTEGER(9)    NOT NULL,
    PRIMARY KEY([PassengerSSN]),
    UNIQUE([PassengerSSN])
  );
@@ -62,12 +62,12 @@ CREATE TABLE Passenger
 /* TRAIN STATUS TABLE */
 CREATE TABLE TrainStatus
  (
-   [TrainDate]           DATE           NOTNULL,
-   [TrainName]           VARCHAR(50)   NOTNULL,
-   [PremSeatsOpen]       INTEGER        NOTNULL,
-   [GenSeatsOpen]        INTEGER        NOTNULL,
-   [PremSeatsOccupied]   INTEGER        NOTNULL,
-   [GenSeatsOccupied]    INTEGER        NOTNULL,
+   [TrainDate]           DATE           NOT NULL,
+   [TrainName]           VARCHAR(50)    NOT NULL,
+   [PremSeatsOpen]       INTEGER        NOT NULL,
+   [GenSeatsOpen]        INTEGER        NOT NULL,
+   [PremSeatsOccupied]   INTEGER        NOT NULL,
+   [GenSeatsOccupied]    INTEGER        NOT NULL,
    PRIMARY KEY([TrainNumber]),
    FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
    ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -86,10 +86,10 @@ INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsO
 /* TICKET TABLE */
 CREATE TABLE Ticket
   (
-    [PassengerSSN]   INTEGER(9)    NOTNULL,
-    [TrainNumber]    INTEGER       NOTNULL,
-    [TicketType]     VARCHAR(10)  NOTNULL,
-    [TicketStatus]   VARCHAR(10)  NOTNULL,
+    [PassengerSSN]   INTEGER(9)    NOT NULL,
+    [TrainNumber]    INTEGER       NOT NULL,
+    [TicketType]     VARCHAR(10)   NOT NULL,
+    [TicketStatus]   VARCHAR(10)   NOT NULL,
     PRIMARY KEY(),
     FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
     ON DELETE NO ACTION ON UPDATE NO ACTION,
