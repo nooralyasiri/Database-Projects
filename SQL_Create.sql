@@ -2,13 +2,13 @@
 CREATE TABLE Train
   (
    [TrainNumber]       INTEGER      NOT NULL,
-   [TrainName]         VARCHAR(15)  NOT NULL,
-   [TrainSource]       VARCHAR(15)  NOT NULL,
-   [TrainDestination]  VARCHAR(15)  NOT NULL,
+   [TrainName]         VARCHAR(30)  NOT NULL,
+   [TrainSource]       VARCHAR(30)  NOT NULL,
+   [TrainDestination]  VARCHAR(30)  NOT NULL,
    [PremiumFare]       INTEGER,
    [GeneralFare]       INTEGER,
    [Schedule]          VARCHAR(50),
-   PRIMARY KEY([TrainName], [TrainNumber])
+   PRIMARY KEY([TrainName])
   );
 
 /* TRAIN DATA */
@@ -29,8 +29,7 @@ CREATE TABLE Passenger
    [PassengerAge]       INTEGER       NOT NULL,
    [PassengerAddress]   VARCHAR(100)  NOT NULL,
    [PassengerSSN]       INTEGER(9)    NOT NULL,
-   PRIMARY KEY([PassengerSSN]),
-   UNIQUE([PassengerSSN])
+   PRIMARY KEY([PassengerSSN])
  );
 
 /* PASSENGER DATA */
@@ -68,10 +67,11 @@ CREATE TABLE TrainStatus
    [GenSeatsOpen]        INTEGER        NOT NULL,
    [PremSeatsOccupied]   INTEGER        NOT NULL,
    [GenSeatsOccupied]    INTEGER        NOT NULL,
-   PRIMARY KEY(),
    FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
    ON DELETE NO ACTION ON UPDATE NO ACTION
  );
+
+CREATE INDEX [IFK_StatusOfTrain] ON [Train] ([TrainName]);
 
 /* TRAIN STATUS DATA */
 INSERT INTO [TrainStatus]([TrainDate],[PremSeatsOpen],[GenSeatsOpen],[PremSeatsOccupied],[GenSeatsOccupied]) VALUES(19/02/2022,"Orient Express",10,10,0,0);
@@ -90,12 +90,15 @@ CREATE TABLE Ticket
     [TrainNumber]    INTEGER       NOT NULL,
     [TicketType]     VARCHAR(10)   NOT NULL,
     [TicketStatus]   VARCHAR(10)   NOT NULL,
-    PRIMARY KEY(),
-    FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
+    PRIMARY KEY([TicketType]),
+    FOREIGN KEY([TrainNumber]) REFERENCES [Train] ([TrainNumber])
     ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY([PassengerSSN]) REFERENCES [Passenger] ([PassengerSSN])
     ON DELETE NO ACTION ON UPDATE NO ACTION
   );
+
+CREATE INDEX [IFK_TrainTickets] ON [Train] ([TrainNumber]);
+CREATE INDEX [IFK_PassengerTicket] ON [Passenger] ([PassengerSSN]);
 
 /* TICKET DATA */
    INSERT INTO [Ticket]([PassengerSSN],[TrainNumber],[TicketType],[TicketStatus]) VALUES(264816896,3,"Premium","Booked");
