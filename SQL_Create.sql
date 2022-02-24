@@ -2,12 +2,12 @@
 CREATE TABLE Train
   (
    [TrainNumber]       INTEGER      NOTNULL,
-   [TrainName]         NVARCHAR(15) NOTNULL,
-   [TrainSource]       NVARCHAR(15) NOTNULL,
-   [TrainDestination]  NVARCHAR(15) NOTNULL,
+   [TrainName]         VARCHAR(15) NOTNULL,
+   [TrainSource]       VARCHAR(15) NOTNULL,
+   [TrainDestination]  VARCHAR(15) NOTNULL,
    [PremiumFare]       INTEGER,
    [GeneralFare]       INTEGER,
-   [Schedule]          NVARCHAR(50),
+   [Schedule]          VARCHAR(50),
    PRIMARY KEY([TrainName], [TrainNumber])
   );
 
@@ -25,9 +25,9 @@ CREATE TABLE Train
 /* PASSENGER TABLE */
 CREATE TABLE Passenger
   (
-   [PassengerName]      NVARCHAR(30)  NOTNULL,
+   [PassengerName]      VARCHAR(30)  NOTNULL,
    [PassengerAge]       INTEGER       NOTNULL,
-   [PassengerAddress]   NVARCHAR(100) NOTNULL,
+   [PassengerAddress]   VARCHAR(100) NOTNULL,
    [PassengerSSN]       INTEGER(9)    NOTNULL,
    PRIMARY KEY([PassengerSSN]),
    UNIQUE([PassengerSSN])
@@ -63,7 +63,7 @@ CREATE TABLE Passenger
 CREATE TABLE TrainStatus
  (
    [TrainDate]           DATE           NOTNULL,
-   [TrainName]           NVARCHAR(50)   NOTNULL,
+   [TrainName]           VARCHAR(50)   NOTNULL,
    [PremSeatsOpen]       INTEGER        NOTNULL,
    [GenSeatsOpen]        INTEGER        NOTNULL,
    [PremSeatsOccupied]   INTEGER        NOTNULL,
@@ -88,8 +88,8 @@ CREATE TABLE Ticket
   (
     [PassengerSSN]   INTEGER(9)    NOTNULL,
     [TrainNumber]    INTEGER       NOTNULL,
-    [TicketType]     NVARCHAR(10)  NOTNULL,
-    [TicketStatus]   NVARCHAR(10)  NOTNULL,
+    [TicketType]     VARCHAR(10)  NOTNULL,
+    [TicketStatus]   VARCHAR(10)  NOTNULL,
     PRIMARY KEY(),
     FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
     ON DELETE NO ACTION ON UPDATE NO ACTION,
