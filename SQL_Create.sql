@@ -68,6 +68,7 @@ CREATE TABLE TrainStatus
    [GenSeatsOpen]        INTEGER        NOT NULL,
    [PremSeatsOccupied]   INTEGER        NOT NULL,
    [GenSeatsOccupied]    INTEGER        NOT NULL,
+   PRIMARY KEY(),
    FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
    ON DELETE NO ACTION ON UPDATE NO ACTION
  );
@@ -89,6 +90,7 @@ CREATE TABLE Ticket
     [TrainNumber]    INTEGER       NOT NULL,
     [TicketType]     VARCHAR(10)   NOT NULL,
     [TicketStatus]   VARCHAR(10)   NOT NULL,
+    PRIMARY KEY(),
     FOREIGN KEY([TrainName]) REFERENCES [Train] ([TrainName])
     ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY([PassengerSSN]) REFERENCES [Passenger] ([PassengerSSN])
