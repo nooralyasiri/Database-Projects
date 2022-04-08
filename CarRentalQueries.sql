@@ -59,22 +59,22 @@ WHERE CustID = '232';
 
 
 
--- 10: Retrieve all weekly rentals for the vechicleID ‘19VDE1F3XEE414842’ that are not paid 
--- yet. List the Customer Name, the start and return date, and the amount.
+-- ✓✓ 10: Retrieve all weekly rentals for the vechicleID ‘19VDE1F3XEE414842’ that are not paid 
+-- yet. List the Customer Name, the start and return date, and the amount. 
 SELECT C.Name, R.StartDate, R.ReturnDate, R.TotalAmount
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
 	AND V.VehicleID = "19VDE1F3XEE414842" 
  	AND R.RentalType = '7'
-	AND R.PaymentDate = NULL;
+	AND R.PaymentDate IS NULL;
 
 
 -- 11: Return all customers that they never rent a vehicle. 
 
 
 
--- 12: Return all rentals that the customer paid on the StartDate. List Customer Name, Vehicle 
+-- ✓✓ 12: Return all rentals that the customer paid on the StartDate. List Customer Name, Vehicle 
 -- Description, StartDate, ReturnDate, and TotalAmount. Order by Customer Name. 
 SELECT C.Name, V.Description, R.StartDate, R.ReturnDate, R.TotalAmount
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
