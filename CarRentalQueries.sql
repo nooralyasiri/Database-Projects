@@ -80,5 +80,5 @@ SELECT C.Name, V.Description, R.StartDate, R.ReturnDate, R.TotalAmount
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
-	AND S.StartDate = R.PaymentDate
+	AND R.StartDate = R.PaymentDate
 	ORDER BY C.Name;
