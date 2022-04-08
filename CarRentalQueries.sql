@@ -8,7 +8,9 @@ VALUES ('N.Alyasiri','(123)456-7890');
 
 
 -- 2: Update your phone number to (837) 721-8965
-
+UPDATE Customer
+SET Phone='(837) 721-8965'
+WHERE CustID = '232';
 
 
 -- 3: Increase only daily rates for luxury vehicles by 5%
