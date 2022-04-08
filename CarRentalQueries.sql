@@ -1,7 +1,10 @@
 /* QUERIES */
 
 -- 1: Insert yourself as a New Customer. Do not provide the CustomerID in your query. 
+ALTER TABLE Customer AUTO_INCREMENT = 1;
 
+INSERT INTO Customer (Name, Phone)
+VALUES ('N.Alyasiri','(123)456-7890');
 
 
 -- 2: Update your phone number to (837) 721-8965
