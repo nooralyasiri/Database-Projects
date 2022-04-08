@@ -5,7 +5,7 @@
   (
     [CustID]           INTEGER      NOT NULL,
     [Name]             VARCHAR(30)  NOT NULL, /* INTEGER(10)?...given we assume no -'s, just a standard #? */
-    [Phone]            VARCHAR(10)  NOT NULL,
+    [Phone]            VARCHAR(30)  NOT NULL,
     PRIMARY KEY([CustID])
   );
 
@@ -13,7 +13,7 @@
   CREATE TABLE Rental 
   (
     [CustID]           INTEGER      NOT NULL,
-    [VehicleID]        INTEGER      NOT NULL,
+    [VehicleID]        VARCHAR(45)     NOT NULL,
     [StartDate]        DATE         NOT NULL,
     [OrderDate]        DATE         NOT NULL,
     [RentalType]       INTEGER      NOT NULL, /* 1 for daily, 7 for weekly */
@@ -37,10 +37,10 @@
   /* VEHICLE TABLE */
   CREATE TABLE Vehicle 
   (
-    [VehicleID]       INTEGER      NOT NULL,
+    [VehicleID]       VARCHAR(45)      NOT NULL,
     [Description]     VARCHAR(30)  NOT NULL, /* not too sure what it's asking for here...*/
-    [Year]            INTEGER(4)   NOT NULL,
-    [Type]            INTEGER(1)   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:VAN */
+    [Year]            INTEGER   NOT NULL,
+    [Type]            INTEGER   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:VAN */
     [Category]        BOOLEAN      NOT NULL, /* 0:Basic, 1:Luxury */
     PRIMARY KEY([VehicleID]),
     FOREIGN KEY([Type]) REFERENCES [Rate] ([Type])
@@ -52,12 +52,10 @@
   /* RATE TABLE */
   CREATE TABLE RATE
   (
-    [Type]            INTEGER(1)   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:VAN */
+    [Type]            INTEGER   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:VAN */
     [Category]        BOOLEAN      NOT NULL, /* 0:Basic, 1:Luxury */
-    [Weekly]          INTEGER(1)   NOT NULL, /* 7 for weekly */
-    [Daily]           INTEGER(1)   NOT NULL, /* 1 for daily */
+    [Weekly]          INTEGER   NOT NULL, /* 7 for weekly */
+    [Daily]           INTEGER   NOT NULL, /* 1 for daily */
   );
 
 /* ============================================================================================================================ */
-
-/* note: i put not null for everything just to be safe for the time being lol but we can change it up! 4/8/22 */
