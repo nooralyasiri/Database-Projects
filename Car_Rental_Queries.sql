@@ -39,9 +39,8 @@ VALUES (6,1,800,135);
 
 SELECT V.VehicleID AS VIN, Description, Year, DATEDIFF (R.returnDate, R.startDate) AS Days
 FROM Vehicle V JOIN Rental R ON V.VehicleID = R.VehicleID 
-WHERE Type=1 AND Category=1 ;
- /* nearly gets everything except for their availability between the two days */
-
+WHERE Type=1 AND Category=1 AND (R.startDate NOT BETWEEN '2019-06-01' AND '2019-06-20') AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20');
+/* Should work but there might be confusion/misunderstanding...review! */ 
 
 -- 6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
 -- name, and the balance.
