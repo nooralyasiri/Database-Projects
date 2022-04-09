@@ -44,7 +44,7 @@ VALUES (6,1,800,135);
 SELECT Name, SUM(TotalAmount)
 FROM Customer C JOIN Rental R ON C.CustID=R.CustID
 WHERE C.CustID='221' ;
-/* come back to this and make sure it was understood correctly */
+/* Review in case of misunderstanding */
 
 
 -- 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
@@ -56,7 +56,7 @@ WHERE C.CustID='221' ;
 
 -- 8: What is the total of money that customers paid to us until today?
 SELECT SUM(TotalAmount) FROM Rental 
-/* review */
+
 
 -- 9-a: Create a report for the J. Brown customer with all vehicles he rented. List the description, 
 -- year, type, and category. Also, calculate the unit price for every rental, the total duration mention if it is 
@@ -78,6 +78,8 @@ WHERE C.CustID = R.CustID
 	AND V.VehicleID = "19VDE1F3XEE414842" 
  	AND R.RentalType = '7'
 	AND R.PaymentDate IS NULL;
+	
+/* Ran it! Should be correct given it seems like everyone has paid. */ 
 
 
 -- 11: Return all customers that they never rent a vehicle. 
@@ -92,3 +94,5 @@ WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
 	AND R.StartDate = R.PaymentDate
 	ORDER BY C.Name;
+	
+/* Ran it! This works as well! */
