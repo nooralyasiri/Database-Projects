@@ -19,7 +19,8 @@ WHERE CustID = '232';
 
 -- 4-a: Insert a new luxury van with the following info: Honda Odyssey 2019, vehicle id: 
 -- 5FNRL6H58KB133711 
-
+INSERT INTO [VEHICLE] ([VehicleID],[Description],[Year],[Type],[Category]) 
+VALUES ('5FNRL6H58KB133711',"Honda Odyssey",2019,6,1);
 
 
 -- 4-b: You also need to insert the following rates: 
