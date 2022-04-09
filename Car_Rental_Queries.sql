@@ -37,6 +37,10 @@ VALUES (6,1,800,135);
 -- until June 20, 2019. List VechicleID as VIN, Description, year, and how many days have been rented so 
 -- far. You need to change the weeks into days. 
 
+SELECT V.VehicleID AS VIN, Description, Year, DATEDIFF (R.returnDate, R.startDate) AS Days
+FROM Vehicle V JOIN Rental R ON V.VehicleID = R.VehicleID 
+WHERE Type=1 AND Category=1 ;
+ /* nearly gets everything except for their availability between the two days */
 
 
 -- 6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
