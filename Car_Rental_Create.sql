@@ -1,12 +1,11 @@
- /* CREATING TABLES */
+/* CREATING TABLES */
   
   /* CUSTOMER TABLE */
   CREATE TABLE CUSTOMER
   (
-    [CustID]           INTEGER      NOT NULL AUTO_INCREMENT,
+    [CustID]           INTEGER      PRIMARY KEY AUTOINCREMENT,
     [Name]             VARCHAR(30)  NOT NULL, 
-    [Phone]            VARCHAR(15)  NOT NULL,
-    PRIMARY KEY([CustID])
+    [Phone]            VARCHAR(15)  NOT NULL
   );
   
  /* VEHICLE TABLE */
@@ -49,7 +48,7 @@
   /* RATE TABLE */
   CREATE TABLE RATE
   (
-    [Type]            INTEGER(1)   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:VAN */
+    [Type]            INTEGER(1)   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:Van */
     [Category]        INTEGER      NOT NULL, /* 0:Basic, 1:Luxury */
     [Weekly]          INTEGER(1)   NOT NULL, /* 7 for weekly */
     [Daily]           INTEGER(1)   NOT NULL /* 1 for daily */
@@ -70,12 +69,12 @@ INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(202,"S. Patel","(849) 81
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(203,"A. Hernandez","(355) 572-5385");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(204,"G. Carver","(753) 763-8656");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(205,"Sh. Byers","(912) 925-5332");
-INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(206,"L. Lutz","(931) 966-1775)";
+INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(206,"L. Lutz","(931) 966-1775");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(207,"L. Bernal","(884) 727-0591");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(208,"I. Whyte","(811) 979-7345");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(209,"L. Lott","(954) 706-2219");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(210,"G. Clarkson","(309) 625-1838");
-INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(211,"Sh. Dunlap","(604) 581-6642)";
+INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(211,"Sh. Dunlap","(604) 581-6642");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(212,"H. Gallegos","(961) 265-8638");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(213,"L. Perkins","(317) 996-3104");
 INSERT INTO [CUSTOMER] ([CustID],[Name],[Phone]) VALUES(214,"M. Beach","(481) 422-0282");
