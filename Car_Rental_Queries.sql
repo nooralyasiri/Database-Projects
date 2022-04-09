@@ -14,7 +14,9 @@ WHERE CustID = '232';
 
 
 -- 3: Increase only daily rates for luxury vehicles by 5%
-
+UPDATE Rate
+SET Daily=(Daily * 0.05) + Daily 
+WHERE Category=1;
 
 
 -- 4-a: Insert a new luxury van with the following info: Honda Odyssey 2019, vehicle id: 
@@ -25,7 +27,11 @@ VALUES ('5FNRL6H58KB133711',"Honda Odyssey",2019,6,1);
 
 -- 4-b: You also need to insert the following rates: 
 
+INSERT INTO Rate (Type, Category, Weekly, Daily)
+VALUES (5,1,900,150);
 
+INSERT INTO Rate (Type, Category, Weekly, Daily)
+VALUES (6,1,800,135);
 
 -- 5: Return all Compact(1) & Luxury(1) vehicles that were available for rent from June 01, 2019 
 -- until June 20, 2019. List VechicleID as VIN, Description, year, and how many days have been rented so 
