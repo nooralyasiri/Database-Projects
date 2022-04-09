@@ -83,7 +83,11 @@ WHERE C.CustID = R.CustID
 
 
 -- 11: Return all customers that they never rent a vehicle. 
+SELECT DISTINCT Customer.* 
+FROM Customer 
+WHERE Customer.CustID NOT IN (SELECT Rental.CustID FROM RENTAL) ;
 
+/* Ran it! Got the right values. */
 
 
 -- ✓✓ 12: Return all rentals that the customer paid on the StartDate. List Customer Name, Vehicle 
