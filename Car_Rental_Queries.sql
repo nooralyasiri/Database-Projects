@@ -41,7 +41,10 @@ VALUES (6,1,800,135);
 
 -- 6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
 -- name, and the balance.
-
+SELECT Name, SUM(TotalAmount)
+FROM Customer C JOIN Rental R ON C.CustID=R.CustID
+WHERE C.CustID='221' ;
+/* come back to this and make sure it was understood correctly */
 
 
 -- 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
