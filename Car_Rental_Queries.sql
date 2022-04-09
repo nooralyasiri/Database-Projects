@@ -55,8 +55,8 @@ WHERE C.CustID='221' ;
 
 
 -- 8: What is the total of money that customers paid to us until today?
-
-
+SELECT SUM(TotalAmount) FROM Rental 
+/* review */
 
 -- 9-a: Create a report for the J. Brown customer with all vehicles he rented. List the description, 
 -- year, type, and category. Also, calculate the unit price for every rental, the total duration mention if it is 
