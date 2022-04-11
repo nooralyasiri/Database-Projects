@@ -54,8 +54,25 @@ WHERE C.CustID='221' ;
 -- Type, Category, and Weekly and Daily rates. For the vehicle Type and Category, you need to use the 
 -- SQL Case statement to substitute the numbers with text. Order your results based on Category (first 
 -- Luxury and then Basic) and Type based on the Type number, not the text.
-
-
+SELECT Vehicle *
+CASE RentalType
+      WHEN '1' THEN 'Daily'
+      WHEN '7' THEN 'Weekly'
+CASE Type
+      WHEN '1' THEN 'Compact'
+      WHEN '2' THEN 'Medium'
+      WHEN '3' THEN 'Large'
+      WHEN '4' THEN 'SUV'
+      WHEN '5' THEN 'Truck'
+      WHEN '6' THEN 'VAN'
+Case Category
+      WHEN '0' THEN 'Basic'
+      WHEN '1' THEN 'Luxury'
+FROM VECHICLE 
+WHERE C.CustID = R.CustID
+      AND R.VehicleID = V.VehicleID   
+ORDER BY Luxury,Basic;
+/* Review in case of misunderstanding */
 
 -- 8: What is the total of money that customers paid to us until today?
 SELECT SUM(TotalAmount) FROM Rental 
