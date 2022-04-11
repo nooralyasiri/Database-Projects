@@ -68,7 +68,7 @@ CASE Type
 Case Category
       WHEN '0' THEN 'Basic'
       WHEN '1' THEN 'Luxury'
-FROM VECHICLE 
+FROM CUSTOMER as C, VEHICLE as V, RENTAL as R 
 WHERE C.CustID = R.CustID
       AND R.VehicleID = V.VehicleID   
 ORDER BY Luxury,Basic;
@@ -82,8 +82,26 @@ SELECT SUM(TotalAmount) FROM Rental
 -- year, type, and category. Also, calculate the unit price for every rental, the total duration mention if it is 
 -- on weeks or days, the total amount, and if there is any payment. Similarly, as in Question 7, you need to 
 -- change the numeric values to the corresponding text. Order the results by the StartDate.  
-
-
+SELECT Vehicle *, SUM(TotalAmount)
+CASE RentalType
+      WHEN '1' THEN 'Daily'
+      WHEN '7' THEN 'Weekly'
+CASE Type
+      WHEN '1' THEN 'Compact'
+      WHEN '2' THEN 'Medium'
+      WHEN '3' THEN 'Large'
+      WHEN '4' THEN 'SUV'
+      WHEN '5' THEN 'Truck'
+      WHEN '6' THEN 'VAN'
+Case Category
+      WHEN '0' THEN 'Basic'
+      WHEN '1' THEN 'Luxury'
+FROM CUSTOMER as C, VEHICLE as V, RENTAL as R 
+WHERE C.CustID = R.CustID
+	AND R.VehicleID = V.VehicleID
+  AND C.Name = 'J. Brown'
+ORDER BY StartDate DESC;
+/* Review in case of misunderstanding ... not sure if am missing something */
 
 -- 9-b: For the same customer return the current balance
 
