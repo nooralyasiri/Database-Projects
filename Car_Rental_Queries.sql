@@ -9,12 +9,12 @@ INSERT QUERIES WILL BE DONE LAST
 ------------------------------
 5. DONE (Comments)
 6. DONE
-7.
-8.
-9.
-9-a.
+7. DONE
+8. DONE
+9-a. WORK IN PROGRESS...
+9-b. 
 10. DONE
-11.
+11. DONE
 12. DONE 
 */
 
@@ -70,58 +70,67 @@ JOIN Rental R ON C.CustID = R.CustID
 WHERE C.CustID = '221';
 
 
--- 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
+-- ✓✓ 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
 -- Type, Category, and Weekly and Daily rates. For the vehicle Type and Category, you need to use the 
 -- SQL Case statement to substitute the numbers with text. Order your results based on Category (first 
 -- Luxury and then Basic) and Type based on the Type number, not the text.
-SELECT Vehicle *
-CASE RentalType
-      WHEN '1' THEN 'Daily'
-      WHEN '7' THEN 'Weekly'
-CASE Type
-      WHEN '1' THEN 'Compact'
-      WHEN '2' THEN 'Medium'
-      WHEN '3' THEN 'Large'
-      WHEN '4' THEN 'SUV'
-      WHEN '5' THEN 'Truck'
-      WHEN '6' THEN 'VAN'
-Case Category
-      WHEN '0' THEN 'Basic'
-      WHEN '1' THEN 'Luxury'
-FROM CUSTOMER as C, VEHICLE as V, RENTAL as R 
-WHERE C.CustID = R.CustID
-      AND R.VehicleID = V.VehicleID   
-ORDER BY Luxury,Basic;
-/* Review in case of misunderstanding */
+SELECT VehicleID AS VIN,
+	Description, 
+	Year, 
+	CASE
+		WHEN V.Type = '1' THEN 'Compact'
+		WHEN V.Type = '2' THEN 'Medium'
+		WHEN V.Type = '3' THEN 'Large'
+		WHEN V.Type = '4' THEN 'SUV'
+		WHEN V.Type = '5' THEN 'Truck'
+		WHEN V.Type = '6' THEN 'VAN'
+	END AS Type,
+	CASE
+		WHEN V.Category = '0' THEN 'Basic'
+		WHEN V.Category = '1' THEN 'Luxury'
+	END AS Category,
+	Weekly AS 'Weekly Rate',
+	Daily AS 'Daily Rate'
+FROM VEHICLE AS V, RATE AS T
+WHERE V.Type = T.Type
+	AND V.Category = T.Category
+ORDER BY Category DESC, V.Type;
 
--- 8: What is the total of money that customers paid to us until today?
-SELECT SUM(TotalAmount) FROM Rental 
+-- 8: ✓✓ What is the total of money that customers paid to us until today?
+SELECT SUM(TotalAmount) AS 'Total Amount'
+FROM Rental;
 
 
 -- 9-a: Create a report for the J. Brown customer with all vehicles he rented. List the description, 
 -- year, type, and category. Also, calculate the unit price for every rental, the total duration mention if it is 
 -- on weeks or days, the total amount, and if there is any payment. Similarly, as in Question 7, you need to 
 -- change the numeric values to the corresponding text. Order the results by the StartDate.  
-SELECT Vehicle *, SUM(TotalAmount)
-CASE RentalType
-      WHEN '1' THEN 'Daily'
-      WHEN '7' THEN 'Weekly'
-CASE Type
-      WHEN '1' THEN 'Compact'
-      WHEN '2' THEN 'Medium'
-      WHEN '3' THEN 'Large'
-      WHEN '4' THEN 'SUV'
-      WHEN '5' THEN 'Truck'
-      WHEN '6' THEN 'VAN'
-Case Category
-      WHEN '0' THEN 'Basic'
-      WHEN '1' THEN 'Luxury'
-FROM CUSTOMER as C, VEHICLE as V, RENTAL as R 
+SELECT Description, 
+	Year, 
+	CASE
+		WHEN Type = '1' THEN 'Compact'
+		WHEN Type = '2' THEN 'Medium'
+		WHEN Type = '3' THEN 'Large'
+		WHEN Type = '4' THEN 'SUV'
+		WHEN Type = '5' THEN 'Truck'
+		WHEN Type = '6' THEN 'VAN'
+	END AS Type,
+	CASE
+		WHEN Category = '0' THEN 'Basic'
+		WHEN Category = '1' THEN 'Luxury'
+	END AS Category,
+	CASE
+		WHEN RentalType = '1' THEN 'Daily'
+      	WHEN RentalType = '7' THEN 'Weekly'
+	END AS RentalType,
+	SUM(TotalAmount)
+FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
-  AND C.Name = 'J. Brown'
+  	AND C.Name = 'J. Brown'
 ORDER BY StartDate DESC;
-/* Review in case of misunderstanding ... not sure if am missing something */
+
+/* CURRENTLY WORKING ON THIS*/
 
 -- 9-b: For the same customer return the current balance
 
@@ -138,10 +147,10 @@ WHERE C.CustID = R.CustID
 	AND R.PaymentDate IS NULL;
 
 
--- 11: Return all customers that they never rent a vehicle. 
+-- ✓✓ 11: Return all customers that they never rent a vehicle. 
 SELECT DISTINCT Customer.* 
 FROM Customer 
-WHERE Customer.CustID NOT IN (SELECT Rental.CustID FROM RENTAL) ;
+WHERE Customer.CustID NOT IN (SELECT Rental.CustID FROM RENTAL);
 
 
 -- ✓✓ 12: Return all rentals that the customer paid on the StartDate. List Customer Name, Vehicle 
