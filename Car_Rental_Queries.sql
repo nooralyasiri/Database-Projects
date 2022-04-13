@@ -1,4 +1,22 @@
-/* QUERIES */
+/* QUERIES 
+INSERT QUERIES WILL BE DONE LAST
+1.
+2.
+3.
+4.
+4-a.
+4-b.
+------------------------------
+5. DONE (Comments)
+6. DONE
+7.
+8.
+9.
+9-a.
+10. DONE
+11.
+12. DONE 
+*/
 
 -- 1: Insert yourself as a New Customer. Do not provide the CustomerID in your query. 
 ALTER TABLE Customer AUTO_INCREMENT = 1;
@@ -33,21 +51,23 @@ VALUES (5,1,900,150);
 INSERT INTO Rate (Type, Category, Weekly, Daily)
 VALUES (6,1,800,135);
 
--- 5: Return all Compact(1) & Luxury(1) vehicles that were available for rent from June 01, 2019 
--- until June 20, 2019. List VechicleID as VIN, Description, year, and how many days have been rented so 
+-- ✓✓ 5: Return all Compact(1) & Luxury(1) vehicles that were available for rent from June 01, 2019 
+-- until June 20, 2019. List VehicleID as VIN, Description, year, and how many days have been rented so 
 -- far. You need to change the weeks into days. 
 
-SELECT V.VehicleID AS VIN, Description, Year, DATEDIFF (R.returnDate, R.startDate) AS Days
+SELECT V.VehicleID AS VIN, Description, Year, JULIANDAY(R.returnDate) - JULIANDAY(R.startDate) AS 'Days Rented' 
 FROM Vehicle V JOIN Rental R ON V.VehicleID = R.VehicleID 
-WHERE Type=1 AND Category=1 AND (R.startDate NOT BETWEEN '2019-06-01' AND '2019-06-20') AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20');
-/* Should work but there might be confusion/misunderstanding...review! */ 
+WHERE Type = 1 AND Category = 1 AND (R.startDate NOT BETWEEN '2019-06-01' AND '2019-06-20') AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20');
 
--- 6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
+/* I'm assuming they meant vehicles that WEREN'T available in the question (typo)? Also had to change to JULIANDAY for SQLite */
+
+
+-- ✓✓ 6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
 -- name, and the balance.
-SELECT Name, SUM(TotalAmount)
-FROM Customer C JOIN Rental R ON C.CustID=R.CustID
-WHERE C.CustID='221' ;
-/* Review in case of misunderstanding */
+SELECT Name, SUM(TotalAmount) AS 'Remaining Balance'
+FROM Customer C 
+JOIN Rental R ON C.CustID = R.CustID
+WHERE C.CustID = '221';
 
 
 -- 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
@@ -116,16 +136,12 @@ WHERE C.CustID = R.CustID
 	AND V.VehicleID = "19VDE1F3XEE414842" 
  	AND R.RentalType = '7'
 	AND R.PaymentDate IS NULL;
-	
-/* Ran it! Should be correct given it seems like everyone has paid. */ 
 
 
 -- 11: Return all customers that they never rent a vehicle. 
 SELECT DISTINCT Customer.* 
 FROM Customer 
 WHERE Customer.CustID NOT IN (SELECT Rental.CustID FROM RENTAL) ;
-
-/* Ran it! Got the right values. */
 
 
 -- ✓✓ 12: Return all rentals that the customer paid on the StartDate. List Customer Name, Vehicle 
@@ -136,5 +152,3 @@ WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
 	AND R.StartDate = R.PaymentDate
 	ORDER BY C.Name;
-	
-/* Ran it! This works as well! */
