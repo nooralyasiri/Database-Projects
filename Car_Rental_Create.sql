@@ -23,6 +23,15 @@
     ON DELETE NO ACTION ON UPDATE NO ACTION
   );
 
+  /* RATE TABLE */
+  CREATE TABLE RATE
+  (
+    [Type]            INTEGER(1)   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:Van */
+    [Category]        INTEGER      NOT NULL, /* 0:Basic, 1:Luxury */
+    [Weekly]          INTEGER(1)   NOT NULL, /* 7 for weekly */
+    [Daily]           INTEGER(1)   NOT NULL /* 1 for daily */
+  );
+
   /* RENTAL TABLE */
   CREATE TABLE RENTAL 
   (
@@ -38,20 +47,7 @@
     FOREIGN KEY([CustID]) REFERENCES [CUSTOMER] ([CustID])
     ON DELETE NO ACTION ON UPDATE NO ACTION,
     FOREIGN KEY([VehicleID]) REFERENCES [VEHICLE] ([VehicleID])
-    ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY([RentalType]) REFERENCES [RATE] ([Weekly])
-    ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY([RentalType]) REFERENCES [RATE] ([Daily])
     ON DELETE NO ACTION ON UPDATE NO ACTION
-  );
-
-  /* RATE TABLE */
-  CREATE TABLE RATE
-  (
-    [Type]            INTEGER(1)   NOT NULL, /* 1:Compact, 2:Medium, 3:Large, 4:SUV, 5:Truck, 6:Van */
-    [Category]        INTEGER      NOT NULL, /* 0:Basic, 1:Luxury */
-    [Weekly]          INTEGER(1)   NOT NULL, /* 7 for weekly */
-    [Daily]           INTEGER(1)   NOT NULL /* 1 for daily */
   );
 
 /* ============================================================================================================================ */
