@@ -69,12 +69,17 @@ Also had to change to JULIANDAY for SQLite */
 --  6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
 -- name, and the balance.
 SELECT Name, SUM(TotalAmount) AS 'Remaining Balance'
-FROM Customer C 
-JOIN Rental R ON C.CustID = R.CustID
-WHERE C.CustID = '221';
+FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
+WHERE C.CustID = R.CustID
+	AND R.VehicleID = V.VehicleID
+	AND C.CustID = '221'
+	AND TotalAmount IN (
+		SELECT TotalAmount
+		FROM RENTAL
+		WHERE PaymentDate IS NULL );
 
-/* Refer to questions 9-b also: Asks for remaining balance, so what he hasn't paid yet? This query pulls the total
-amount*/
+/* Refer to questions 9-b also: Asks for remaining balance, so what he hasn't paid yet? This query will pull the
+remaining amount of money that he owes*/
 
 
 -- ✓✓ 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
@@ -146,7 +151,7 @@ ORDER BY StartDate DESC;
 
 
 -- 9-b: For the same customer return the current balance
-SELECT SUM(TotalAmount)
+SELECT SUM(TotalAmount) AS 'Current Balance'
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
@@ -157,7 +162,7 @@ WHERE C.CustID = R.CustID
 		WHERE PaymentDate IS NULL );
 
 /* What is current balance referring to? How much he still needs to pay or how much he has paid already?
-This query pulls what he still needs to pay so it can be used for question 6; also refer to question 6*/
+This query pulls what he still needs to pay so it can be used for question 6*/
 	
 
 -- ✓✓ 10: Retrieve all weekly rentals for the vehicleID ‘19VDE1F3XEE414842’ that are not paid 
