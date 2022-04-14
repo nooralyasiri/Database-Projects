@@ -1,49 +1,48 @@
 /* QUERIES 
 INSERT QUERIES WILL BE DONE LAST
-1.
-2.
-3.
-4.
-4-a.
-4-b.
+1. DONE
+2. DONE
+3. DONE
+4. DONE
+4-a. DONE
+4-b. DONE
 ------------------------------
+MAKE SURE TO GO OVER TO SEE IF THE CORRECT DATA IS BEING PULLED
 5. DONE (Comments)
 6. DONE
 7. DONE
 8. DONE
-9-a. WORK IN PROGRESS...
-9-b. 
+9-a. DONE
+9-b. DONE
 10. DONE
 11. DONE
 12. DONE 
 */
 
--- 1: Insert yourself as a New Customer. Do not provide the CustomerID in your query. 
-ALTER TABLE Customer AUTO_INCREMENT = 1;
-
+-- ✓✓ 1: Insert yourself as a New Customer. Do not provide the CustomerID in your query. 
 INSERT INTO Customer (Name, Phone)
-VALUES ('N.Alyasiri','(123)456-7890');
+VALUES ('N.Alyasiri','(123) 456-7890');
 
 
--- 2: Update your phone number to (837) 721-8965
+-- ✓✓ 2: Update your phone number to (837) 721-8965
 UPDATE Customer
 SET Phone='(837) 721-8965'
 WHERE CustID = '232';
 
 
--- 3: Increase only daily rates for luxury vehicles by 5%
+-- 3: ✓✓ Increase only daily rates for luxury vehicles by 5%
 UPDATE Rate
-SET Daily=(Daily * 0.05) + Daily 
-WHERE Category=1;
+SET Daily = (Daily * 0.05) + Daily 
+WHERE Category = 1;
 
 
--- 4-a: Insert a new luxury van with the following info: Honda Odyssey 2019, vehicle id: 
+-- ✓✓ 4-a: Insert a new luxury van with the following info: Honda Odyssey 2019, vehicle id: 
 -- 5FNRL6H58KB133711 
 INSERT INTO [VEHICLE] ([VehicleID],[Description],[Year],[Type],[Category]) 
 VALUES ('5FNRL6H58KB133711',"Honda Odyssey",2019,6,1);
 
 
--- 4-b: You also need to insert the following rates: 
+-- ✓✓ 4-b: You also need to insert the following rates: 
 
 INSERT INTO Rate (Type, Category, Weekly, Daily)
 VALUES (5,1,900,150);
@@ -96,12 +95,12 @@ WHERE V.Type = T.Type
 	AND V.Category = T.Category
 ORDER BY Category DESC, V.Type;
 
--- 8: ✓✓ What is the total of money that customers paid to us until today?
+-- ✓✓ 8: What is the total of money that customers paid to us until today?
 SELECT SUM(TotalAmount) AS 'Total Amount'
 FROM Rental;
 
 
--- 9-a: Create a report for the J. Brown customer with all vehicles he rented. List the description, 
+-- ✓✓ 9-a: Create a report for the J. Brown customer with all vehicles he rented. List the description, 
 -- year, type, and category. Also, calculate the unit price for every rental, the total duration mention if it is 
 -- on weeks or days, the total amount, and if there is any payment. Similarly, as in Question 7, you need to 
 -- change the numeric values to the corresponding text. Order the results by the StartDate.  
@@ -123,20 +122,34 @@ SELECT Description,
 		WHEN RentalType = '1' THEN 'Daily'
       	WHEN RentalType = '7' THEN 'Weekly'
 	END AS RentalType,
-	SUM(TotalAmount)
+	TotalAmount/Qty AS 'Unit Price',
+	JULIANDAY(R.returnDate) - JULIANDAY(R.startDate) AS 'Duration (in Days)',
+	TotalAmount,
+	CASE 
+		WHEN PaymentDate IS NULL THEN 'NOT PAID'
+		ELSE 'PAID'
+	END AS Payment
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
   	AND C.Name = 'J. Brown'
 ORDER BY StartDate DESC;
 
-/* CURRENTLY WORKING ON THIS*/
 
 -- 9-b: For the same customer return the current balance
-
-
-
--- ✓✓ 10: Retrieve all weekly rentals for the vechicleID ‘19VDE1F3XEE414842’ that are not paid 
+SELECT SUM(TotalAmount)
+FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
+WHERE C.CustID = R.CustID
+AND R.VehicleID = V.VehicleID
+AND C.Name = 'J. Brown'
+AND TotalAmount IN (
+	SELECT TotalAmount
+	FROM RENTAL
+	WHERE PaymentDate IS NULL
+);
+	
+	
+-- ✓✓ 10: Retrieve all weekly rentals for the vehicleID ‘19VDE1F3XEE414842’ that are not paid 
 -- yet. List the Customer Name, the start and return date, and the amount. 
 SELECT C.Name, R.StartDate, R.ReturnDate, R.TotalAmount
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
