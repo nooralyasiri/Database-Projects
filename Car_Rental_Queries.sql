@@ -9,11 +9,11 @@ INSERT QUERIES WILL BE DONE LAST
 ------------------------------
 MAKE SURE TO GO OVER TO SEE IF THE CORRECT DATA IS BEING PULLED
 5. DONE (Comments)
-6. DONE
+6. QUESTIONS...
 7. DONE
 8. DONE
 9-a. DONE
-9-b. DONE
+9-b. QUESTIONS...
 10. DONE
 11. DONE
 12. DONE 
@@ -21,12 +21,12 @@ MAKE SURE TO GO OVER TO SEE IF THE CORRECT DATA IS BEING PULLED
 
 -- ✓✓ 1: Insert yourself as a New Customer. Do not provide the CustomerID in your query. 
 INSERT INTO Customer (Name, Phone)
-VALUES ('N.Alyasiri','(123) 456-7890');
+VALUES ('N. Alyasiri','(123) 456-7890');
 
 
 -- ✓✓ 2: Update your phone number to (837) 721-8965
 UPDATE Customer
-SET Phone='(837) 721-8965'
+SET Phone = '(837) 721-8965'
 WHERE CustID = '232';
 
 
@@ -55,13 +55,17 @@ VALUES (6,1,800,135);
 -- far. You need to change the weeks into days. 
 
 SELECT V.VehicleID AS VIN, Description, Year, JULIANDAY(R.returnDate) - JULIANDAY(R.startDate) AS 'Days Rented' 
-FROM Vehicle V JOIN Rental R ON V.VehicleID = R.VehicleID 
-WHERE Type = 1 AND Category = 1 AND (R.startDate NOT BETWEEN '2019-06-01' AND '2019-06-20') AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20');
+FROM Vehicle V 
+JOIN Rental R ON V.VehicleID = R.VehicleID 
+WHERE Type = 1 
+	AND Category = 1 
+	AND (R.startDate NOT BETWEEN '2019-06-01' AND '2019-06-20') 
+	AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20');
 
 /* I'm assuming they meant vehicles that WEREN'T available in the question (typo)? Also had to change to JULIANDAY for SQLite */
 
 
--- ✓✓ 6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
+--  6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
 -- name, and the balance.
 SELECT Name, SUM(TotalAmount) AS 'Remaining Balance'
 FROM Customer C 
@@ -97,7 +101,8 @@ ORDER BY Category DESC, V.Type;
 
 -- ✓✓ 8: What is the total of money that customers paid to us until today?
 SELECT SUM(TotalAmount) AS 'Total Amount'
-FROM Rental;
+FROM Rental
+WHERE PaymentDate IS NOT NULL;
 
 
 -- ✓✓ 9-a: Create a report for the J. Brown customer with all vehicles he rented. List the description, 
@@ -140,15 +145,14 @@ ORDER BY StartDate DESC;
 SELECT SUM(TotalAmount)
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
-AND R.VehicleID = V.VehicleID
-AND C.Name = 'J. Brown'
-AND TotalAmount IN (
-	SELECT TotalAmount
-	FROM RENTAL
-	WHERE PaymentDate IS NULL
-);
+	AND R.VehicleID = V.VehicleID
+	AND C.Name = 'J. Brown'
+	AND TotalAmount IN (
+		SELECT TotalAmount
+		FROM RENTAL
+		WHERE PaymentDate IS NULL );
 	
-	
+
 -- ✓✓ 10: Retrieve all weekly rentals for the vehicleID ‘19VDE1F3XEE414842’ that are not paid 
 -- yet. List the Customer Name, the start and return date, and the amount. 
 SELECT C.Name, R.StartDate, R.ReturnDate, R.TotalAmount
@@ -163,7 +167,9 @@ WHERE C.CustID = R.CustID
 -- ✓✓ 11: Return all customers that they never rent a vehicle. 
 SELECT DISTINCT Customer.* 
 FROM Customer 
-WHERE Customer.CustID NOT IN (SELECT Rental.CustID FROM RENTAL);
+WHERE Customer.CustID NOT IN (
+	SELECT Rental.CustID 
+	FROM RENTAL);
 
 
 -- ✓✓ 12: Return all rentals that the customer paid on the StartDate. List Customer Name, Vehicle 
