@@ -62,7 +62,8 @@ WHERE Type = 1
 	AND (R.startDate NOT BETWEEN '2019-06-01' AND '2019-06-20') 
 	AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20');
 
-/* I'm assuming they meant vehicles that WEREN'T available in the question (typo)? Also had to change to JULIANDAY for SQLite */
+/* I'm assuming they meant vehicles that WEREN'T available in the question (typo)? 
+Also had to change to JULIANDAY for SQLite */
 
 
 --  6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
@@ -71,6 +72,9 @@ SELECT Name, SUM(TotalAmount) AS 'Remaining Balance'
 FROM Customer C 
 JOIN Rental R ON C.CustID = R.CustID
 WHERE C.CustID = '221';
+
+/* Refer to questions 9-b also: Asks for remaining balance, so what he hasn't paid yet? This query pulls the total
+amount*/
 
 
 -- ✓✓ 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
@@ -151,6 +155,9 @@ WHERE C.CustID = R.CustID
 		SELECT TotalAmount
 		FROM RENTAL
 		WHERE PaymentDate IS NULL );
+
+/* What is current balance referring to? How much he still needs to pay or how much he has paid already?
+This query pulls what he still needs to pay so it can be used for question 6; also refer to question 6*/
 	
 
 -- ✓✓ 10: Retrieve all weekly rentals for the vehicleID ‘19VDE1F3XEE414842’ that are not paid 
