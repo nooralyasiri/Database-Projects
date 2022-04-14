@@ -1,23 +1,4 @@
-/* QUERIES 
-INSERT QUERIES WILL BE DONE LAST
-1. DONE
-2. DONE
-3. DONE
-4. DONE
-4-a. DONE
-4-b. DONE
-------------------------------
-MAKE SURE TO GO OVER TO SEE IF THE CORRECT DATA IS BEING PULLED
-5. PULLING WRONG DATA
-6. QUESTIONS...
-7. DONE
-8. DONE
-9-a. DONE
-9-b. QUESTIONS...
-10. DONE
-11. DONE
-12. DONE 
-*/
+/* QUERIES */
 
 -- ✓✓ 1: Insert yourself as a New Customer. Do not provide the CustomerID in your query. 
 INSERT INTO Customer (Name, Phone)
@@ -30,7 +11,7 @@ SET Phone = '(837) 721-8965'
 WHERE CustID = '232';
 
 
--- 3: ✓✓ Increase only daily rates for luxury vehicles by 5%
+-- ✓✓ 3: Increase only daily rates for luxury vehicles by 5%
 UPDATE Rate
 SET Daily = (Daily * 0.05) + Daily 
 WHERE Category = 1;
@@ -50,23 +31,23 @@ VALUES (5,1,900,150);
 INSERT INTO Rate (Type, Category, Weekly, Daily)
 VALUES (6,1,800,135);
 
--- 5: Return all Compact(1) & Luxury(1) vehicles that were available for rent from June 01, 2019 
+-- ✓✓ 5: Return all Compact(1) & Luxury(1) vehicles that were available for rent from June 01, 2019 
 -- until June 20, 2019. List VehicleID as VIN, Description, year, and how many days have been rented so 
 -- far. You need to change the weeks into days. 
 
-SELECT V.VehicleID AS VIN, startDate, ReturnDate, Description, Year, JULIANDAY(R.returnDate) - JULIANDAY(R.startDate) AS 'Days Rented' 
+SELECT V.VehicleID AS VIN, Description, Year, SUM(JULIANDAY(R.returnDate) - JULIANDAY(R.startDate)) AS 'Days Rented' 
 FROM Vehicle V 
 JOIN Rental R ON V.VehicleID = R.VehicleID 
 WHERE Type = 1 
 	AND Category = 1 
 	AND (R.startDate NOT BETWEEN '2019-06-01' AND '2019-06-20') 
-	AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20');
+	AND (R.returnDate NOT BETWEEN '2019-06-01' AND '2019-06-20')
+GROUP BY V.VehicleID;
 
-/* is pulling data from after june 20, 2019 */
 
---  6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
+-- ✓✓ 6: Return a list with the remaining balance for the customer with the id ‘221’. List customer 
 -- name, and the balance.
-SELECT Name, SUM(TotalAmount) AS 'Remaining Balance'
+SELECT Name, TotalAmount AS 'Remaining Balance'
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
 	AND R.VehicleID = V.VehicleID
@@ -75,9 +56,6 @@ WHERE C.CustID = R.CustID
 		SELECT TotalAmount
 		FROM RENTAL
 		WHERE PaymentDate IS NULL );
-
-/* Refer to questions 9-b also: Asks for remaining balance, so what he hasn't paid yet? This query will pull the
-remaining amount of money that he owes*/
 
 
 -- ✓✓ 7: Create a report that will return all vehicles. List the VehicleID as VIN, Description, Year, 
@@ -132,7 +110,7 @@ SELECT Description,
 	END AS Category,
 	CASE
 		WHEN RentalType = '1' THEN 'Daily'
-      	WHEN RentalType = '7' THEN 'Weekly'
+      		WHEN RentalType = '7' THEN 'Weekly'
 	END AS RentalType,
 	TotalAmount/Qty AS 'Unit Price',
 	JULIANDAY(R.returnDate) - JULIANDAY(R.startDate) AS 'Duration (in Days)',
@@ -148,7 +126,7 @@ WHERE C.CustID = R.CustID
 ORDER BY StartDate DESC;
 
 
--- 9-b: For the same customer return the current balance
+-- ✓✓ 9-b: For the same customer return the current balance
 SELECT SUM(TotalAmount) AS 'Current Balance'
 FROM CUSTOMER as C, VEHICLE as V, RENTAL as R
 WHERE C.CustID = R.CustID
@@ -159,9 +137,6 @@ WHERE C.CustID = R.CustID
 		FROM RENTAL
 		WHERE PaymentDate IS NULL );
 
-/* What is current balance referring to? How much he still needs to pay or how much he has paid already?
-This query pulls what he still needs to pay so it can be used for question 6*/
-	
 
 -- ✓✓ 10: Retrieve all weekly rentals for the vehicleID ‘19VDE1F3XEE414842’ that are not paid 
 -- yet. List the Customer Name, the start and return date, and the amount. 
