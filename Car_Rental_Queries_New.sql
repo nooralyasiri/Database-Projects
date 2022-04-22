@@ -21,67 +21,31 @@ SELECT
   ReturnDate, 
   JULIANDAY(R.returnDate) - JULIANDAY(R.startDate) AS 'TotalDays',
   	--Total Days per Rental as TotalDays, -- you need to change weeks to days  
-  Vehicle’s ID as VIN, 
-  Vehicle’s Description as Vehicle,
-  Vehicle’s Type as Type, --you need to use the description of the type  
+  VehicleID as VIN, 
+  Description as Vehicle,
+  --you need to use the description of the type  
   CASE
-	WHEN Type = '1' THEN 'Compact'
-	WHEN Type = '2' THEN 'Medium'
-	WHEN Type = '3' THEN 'Large'
-	WHEN Type = '4' THEN 'SUV'
-	WHEN Type = '5' THEN 'Truck'
-	WHEN Type = '6' THEN 'VAN'
+	WHEN V.Type = '1' THEN 'Compact'
+	WHEN V.Type = '2' THEN 'Medium'
+	WHEN V.Type = '3' THEN 'Large'
+	WHEN V.Type = '4' THEN 'SUV'
+	WHEN V.Type = '5' THEN 'Truck'
+	WHEN V.Type = '6' THEN 'VAN'
   END AS Type,
-  Vehicle’s Category as Category, --you need to use the description of the category  
+  --you need to use the description of the category  
   CASE
-    WHEN Category = '0' THEN 'Basic'
-    WHEN Category = '1' THEN 'Luxury'
+    WHEN V.Category = '0' THEN 'Basic'
+    WHEN V.Category = '1' THEN 'Luxury'
   END AS Category,
-  Customer’s ID as CustomerID,  
-  Customer’s Name as CustomerName,  
-  Order Total Amount as OrderAmount,  
-  Order Remaining Amount as RentalBalance
+  CustID AS CustomerID,  
+  Name as CustomerName,  
+  TotalAmount as OrderAmount, 
+  TotalAmount as RentalBalance
 FROM
-  RENTAL
+  RENTAL as R, VEHICLE AS V, RATE AS T
 WHERE
   V.Type = T.Type
   AND V.Category = T.Category
   ORDER BY StartDate ASC, R.StartDate;
  
  ----Needs editing----
- 
- CREATE VIEW vRentalInfo
-AS
-SELECT 
-  OrderDate, 
-  StartDate, -- in an ascending order  
-  ReturnDate, 
-  Total Days per Rental as TotalDays, -- you need to change weeks to days  
-  VehicleID as VIN, 
-  Description as Vehicle,
-
-  Type, --you need to use the description of the type  
-  CASE
-		WHEN Type = '1' THEN 'Compact'
-		WHEN Type = '2' THEN 'Medium'
-		WHEN Type = '3' THEN 'Large'
-		WHEN Type = '4' THEN 'SUV'
-		WHEN Type = '5' THEN 'Truck'
-		WHEN Type = '6' THEN 'VAN'
-	END AS Type,
- 
-  CASE
-    WHEN Category = '0' THEN 'Basic'
-    WHEN Category = '1' THEN 'Luxury'
-  END AS Category,
-
-  CustID AS CustomerID,  
-  Name as CustomerName,  
-  TotalAmount as OrderAmount, 
-  TotalAmount as RentalBalance
-FROM
-  RENTAL
-WHERE
-  V.Type = T.Type
-  AND V.Category = T.Category
-  ORDER BY StartDate ASC, R.StartDate;
