@@ -50,6 +50,7 @@ FROM
 WHERE
   V.Type = T.Type
   AND V.Category = T.Category
+  AND C.CustID = V.CustID
   ORDER BY StartDate ASC;
  
  ----Needs Testing----
