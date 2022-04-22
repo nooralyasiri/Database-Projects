@@ -19,7 +19,8 @@ SELECT
   OrderDate, 
   StartDate, -- in an ascending order  
   ReturnDate, 
-  Total Days per Rental as TotalDays, -- you need to change weeks to days  
+  JULIANDAY(R.returnDate) - JULIANDAY(R.startDate) AS 'TotalDays',
+  	--Total Days per Rental as TotalDays, -- you need to change weeks to days  
   Vehicle’s ID as VIN, 
   Vehicle’s Description as Vehicle,
   Vehicle’s Type as Type, --you need to use the description of the type  
