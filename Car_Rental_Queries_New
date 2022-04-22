@@ -24,13 +24,13 @@ SELECT
   Vehicle’s Description as Vehicle,
   Vehicle’s Type as Type, --you need to use the description of the type  
   CASE
-		WHEN Type = '1' THEN 'Compact'
-		WHEN Type = '2' THEN 'Medium'
-		WHEN Type = '3' THEN 'Large'
-		WHEN Type = '4' THEN 'SUV'
-		WHEN Type = '5' THEN 'Truck'
-		WHEN Type = '6' THEN 'VAN'
-	END AS Type,
+	WHEN Type = '1' THEN 'Compact'
+	WHEN Type = '2' THEN 'Medium'
+	WHEN Type = '3' THEN 'Large'
+	WHEN Type = '4' THEN 'SUV'
+	WHEN Type = '5' THEN 'Truck'
+	WHEN Type = '6' THEN 'VAN'
+  END AS Type,
   Vehicle’s Category as Category, --you need to use the description of the category  
   CASE
     WHEN Category = '0' THEN 'Basic'
