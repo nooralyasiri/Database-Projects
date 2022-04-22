@@ -1,3 +1,4 @@
+-- Q1
 ALTER TABLE RENTAL
   ADD Returned INT;
 
@@ -8,3 +9,5 @@ WHERE PaymentDate IS NOT NULL;
 UPDATE RENTAL
 SET Returned = 0
 WHERE PaymentDate IS NULL;
+
+---- Needs testing ----
