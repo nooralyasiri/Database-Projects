@@ -40,7 +40,11 @@ SELECT
   CustID AS CustomerID,  
   Name as CustomerName,  
   TotalAmount as OrderAmount, 
-  TotalAmount as RentalBalance
+  (
+    SELECT SUM(TotalAmount) AS 'RentalBalance'
+    FROM Rental as R
+    WHERE PaymentDate IS NULL;
+  )
 FROM
   RENTAL as R, VEHICLE AS V, RATE AS T
 WHERE
