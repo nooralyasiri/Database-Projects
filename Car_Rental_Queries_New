@@ -1,1 +1,10 @@
+ALTER TABLE RENTAL
+  ADD Returned INT;
 
+UPDATE RENTAL
+SET Returned = 1
+WHERE PaymentDate IS NOT NULL;
+
+UPDATE RENTAL
+SET Returned = 0
+WHERE PaymentDate IS NULL;
