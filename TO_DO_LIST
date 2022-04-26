@@ -1,0 +1,70 @@
+QUERY 1: 
+     • ADD NEW CUSTOMER
+     • DO NOT PROVIDE CUSTOMER ID IN QUERY
+-- STATUS: COMPLETE
+
+
+/* ======================================================================= */
+
+
+QUERY 2:
+     • ADD ALL INFORMATION ABOUT NEW VEHICLE 
+      (VehicleID, Description, Year, Type, Category) 
+
+
+/* ======================================================================= */
+
+
+QUERY 3:
+     • ADD ALL INFORMATION ABOUT NEW RENTAL RESERVATION 
+      (CustID, VehicleID, StartDate, OrderDate, RentalType, Quantity, 
+       ReturnDate, TotalAmount, PaymentDate, Returned)
+       
+     • MUST FIND FREE VEHICLE OF APPROPRIATE TYPE AND CATEGORY FOR SPECIFIC RENTAL PERIOD
+     • ASSUME CUSTOMER HAS THE RIGHT TO PAY AT EITHER ORDER OR RETURN DATE
+      
+      
+/* ======================================================================= */
+
+
+QUERY 4: 
+     • HANDLE RETURN OF RENTED CAR
+     • PRINT TOTAL CUSTOMER PAYMENT DUE FOR THAT RENTAL 
+     • ENTER IT IN DB
+     • UPDATE RETURNED ATTRIBUTE ACCORDINGLY 
+     • NEED TO BE ABLE TO RETRIEVE RENTAL BY: ReturnDate, Customer Name (table needs the ID), AND Vehicle Info
+
+
+/* ======================================================================= */
+
+
+QUERY 5:
+     • RETURN VIEW RESULTS 
+     
+     • PART A
+        ○ FOR EVERY CUSTOMER, LIST: CustID, Customer Name, AND IF there is any remaining balance 
+        ○ USER HAS THE RIGHT TO SEARCH BY: CustID, Customer Name, PART OF Name, OR Run the query with NO filters/criteria.
+        ○ AMOUNT NEEDS TO BE IN US DOLLARS
+        ○ FOR CUSTOMERS WITH (0) OR NULL BALANCE: YOU NEED TO RETURN $0.00 DOLLARS
+        ○ MAKE SURE QUERY RETURNS MEANINGFUL ATTRIBUTE NAMES 
+        ○ IN THE CASE THAT USER PROVIDES NO FILTERS, ORDER THE RESULTS BASED ON BALANCE AMOUNT
+        ○ RETURN ALL RECORDS 
+        
+     • PART B
+        ○ FOR EVERY VEHICLE, LIST: VIN, Description, Average DAILY Price
+        ○ USER HAS THE RIGHT TO SEARCH BY: VIN, Description, Part of Description, OR Run the query with NO filters/criteria.
+              ○ Example Criterion: all 'BMW' vehicles 
+        ○ AMOUNT NEEDS TO BE IN US DOLLARS
+        ○ Average DAILY Price DERIVES FROM RENTAL TABLE
+        ○ AMOUNT NEEDS TO HAVE $ AND TWO DECIMALS
+        ○ FOR VEHICLES THAT DO NOT HAVE ANY RENTALS: SUBSTITUTE 'NULL' VALUE WITH 'Non-Applicable' TEXT 
+        ○ MAKE SURE QUERY RETURNS MEANINGFUL ATTRIBUTE NAMES 
+        ○ IN THE CASE THAT USER PROVIDES NO FILTERS, ORDER THE RESULTS BASED ON AVERAGE DAILY PRICE
+        
+        
+/* ======================================================================= */
+        
+        
+
+
+
