@@ -34,6 +34,7 @@ QUERY 3:
 
 
 QUERY 4: 
+     -- Structure is done just need query part (got kinda confused on what is being asked)
      • HANDLE RETURN OF RENTED CAR
      • PRINT TOTAL CUSTOMER PAYMENT DUE FOR THAT RENTAL 
      • ENTER IT IN DB
