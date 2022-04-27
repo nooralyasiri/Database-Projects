@@ -13,7 +13,7 @@ QUERY 1:
 QUERY 2:
      • ADD ALL INFORMATION ABOUT NEW VEHICLE 
       (VehicleID, Description, Year, Type, Category) 
-
+-- STATUS: COMPLETE
 
 /* ======================================================================= */
 
