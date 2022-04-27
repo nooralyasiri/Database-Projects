@@ -218,7 +218,6 @@ def vehicleOutput():
 	vOut_conn.close() # close the DB connection
 
 # ------------------------------------------- ADD RENTAL --------------------------------------------
-
 def addRental():
     global rPopup
     global custID
@@ -298,6 +297,7 @@ def addRental():
     returned_label = Label(rPopup, text = 'Returned: ')
     returned_label.grid(row = 9, column = 0, pady = 10)
 
+  
     # -------------------------------------------------------------------
 
     # buttons
@@ -311,8 +311,8 @@ def rentalSubmit():
     rentalSubmit_conn = sqlite3.connect('car_rental.db') # connecting to database
     rentalSubmit_cur = rentalSubmit_conn.cursor() # cursor
 
-    # executing command to insert new vehicle
-    rentalSubmit_cur.execute("INSERT INTO RENTAL VALUES (:CustID, :VehicleID, :startDate, :orderDate, :rentalType, :qty,      :returnDate, :totalAmount, :paymentDate, :returned) ",
+    # executing command to insert new rental
+    rentalSubmit_cur.execute("INSERT INTO RENTAL VALUES (:CustID, :VehicleID, :startDate, :orderDate, :rentalType, :qty, :returnDate, :totalAmount, :paymentDate, :returned) ",
 	{ 
     'CustID': custID.get(),
 		'VehicleID': vehicleID.get(), 
@@ -324,12 +324,11 @@ def rentalSubmit():
     'totalAmount' : totalAmount.get(),
     'paymentDate' : paymentDate.get(),
     'returned' : returned.get(),
-
 	})
     rentalSubmit_conn.commit() # commit changes
     rentalSubmit_conn.close() # close the DB connection
 
-# outputing vehicles just to see if adding new vehicle worked
+# outputing rentals just to see if adding new rental worked
 # REMOVE LATER
 def rentalOutput():
 	global rOut
@@ -338,7 +337,7 @@ def rentalOutput():
 	rOut.title("Rental Output")
 	rOut.geometry("500x500")
 
-	# ---- implementing a scroll bar to be able to see all vehicles ----
+	# ---- implementing a scroll bar to be able to see all rentals ----
 
 	mainFrame = Frame(rOut) # creating a main frame
 	mainFrame.pack(fill = BOTH, expand = 1) # similar to grid, just more flexible
@@ -361,21 +360,22 @@ def rentalOutput():
 	rOut_conn = sqlite3.connect('car_rental.db')
 	rOut_cur = rOut_conn.cursor() # cursor
 
-	# executing command to output all customers
-	rOut_cur.execute("SELECT * FROM RENTAL;",)
+	# executing command to output type, category, startDate, returnDate
+	rOut_cur.execute("SELECT V.Type, V.Category, startDate, returnDate FROM Vehicle as V, RENTAL as R WHERE V.VehicleID=R.VehicleID;",)
 
 	output_records = rOut_cur.fetchall()
 	print_record = ''
 
 	# integers need to be converted to strings before able to be output
 	for output in output_records:
-		print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "   " + str(output[5]) + "   " + str(output[6]) + "   " + str(output[7]) + "   " + str(output[8]) + "   " + str(output[9]) +  "\n"
+		print_record += str(output[0])+ "   " + str(output[1])  + "   " + str(output[2]) + "   " + str(output[3])+  "\n"
 
 	rOut_label = Label(secondFrame, text = print_record)
 	rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 100)
 
 	rOut_conn.commit() # commit changes
 	rOut_conn.close() # close the DB connection
+
 
 # ------------------------------------------- RETURN CAR --------------------------------------------
 
