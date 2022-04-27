@@ -221,9 +221,161 @@ def vehicleOutput():
 
 def addRental():
     global rPopup
+    global custID
+    global vehicleID
+    global startDate 
+    global orderDate 
+    global rentalType
+    global quantity
+    global returnDate 
+    global totalAmount
+    global paymentDate 
+    global returned 
+
     rPopup = Toplevel(root) # creating new window from root
     rPopup.title("New Rental")
     rPopup.geometry("800x800")
+
+    # ---------------------- TEXT BOXES AND LABELS ----------------------
+
+    # customer ID
+    custID = Entry(rPopup, width = 30) # creates text box
+    custID.grid(row = 0, column = 1) # location of text box
+    custID_label = Label(rPopup, text = 'Customer ID: ') # label text box
+    custID_label.grid(row = 0, column = 0, pady = 10) # location of label
+
+    # vehicle ID
+    vehicleID = Entry(rPopup, width = 30) # creates text box
+    vehicleID.grid(row = 1, column = 1) # location of text box
+    vehicleID_label = Label(rPopup, text = 'Vehicle ID: ') # label text box
+    vehicleID_label.grid(row = 1, column = 0, pady = 10) # location of label
+
+    # start date
+    startDate = Entry(rPopup, width = 30)
+    startDate.grid(row = 2, column = 1)
+    startDate_label = Label(rPopup, text = 'Start Date: ')
+    startDate_label.grid(row = 2, column = 0, pady = 10)
+
+    # order date
+    orderDate = Entry(rPopup, width = 30)
+    orderDate.grid(row = 3, column = 1)
+    orderDate_label = Label(rPopup, text = 'Order Date: ')
+    orderDate_label.grid(row = 3, column = 0, pady = 10)
+
+    # rental type
+    rentalType = Entry(rPopup, width = 30)
+    rentalType.grid(row = 4, column = 1)
+    rentalType_label = Label(rPopup, text = 'Rental Type: ')
+    rentalType_label.grid(row = 4, column = 0, pady = 10)
+
+    # quantity
+    quantity = Entry(rPopup, width = 30)
+    quantity.grid(row = 5, column = 1)
+    quantity_label = Label(rPopup, text = 'Quantity: ')
+    quantity_label.grid(row = 5, column = 0, pady = 10)
+
+    # return date
+    returnDate = Entry(rPopup, width = 30)
+    returnDate.grid(row = 6, column = 1)
+    returnDate_label = Label(rPopup, text = 'Return Date: ')
+    returnDate_label.grid(row = 6, column = 0, pady = 10)
+
+    # total amount
+    totalAmount = Entry(rPopup, width = 30)
+    totalAmount.grid(row = 7, column = 1)
+    totalAmount_label = Label(rPopup, text = 'Total Amount: ')
+    totalAmount_label.grid(row = 7, column = 0, pady = 10)
+
+    # payment date
+    paymentDate = Entry(rPopup, width = 30)
+    paymentDate.grid(row = 8, column = 1)
+    paymentDate_label = Label(rPopup, text = 'Payment Date: ')
+    paymentDate_label.grid(row = 8, column = 0, pady = 10)
+
+    # returned
+    returned = Entry(rPopup, width = 30)
+    returned.grid(row = 9, column = 1)
+    returned_label = Label(rPopup, text = 'Returned: ')
+    returned_label.grid(row = 9, column = 0, pady = 10)
+
+    # -------------------------------------------------------------------
+
+    # buttons
+    submit_btn = Button(rPopup, text = 'Add Rental ', command = rentalSubmit)
+    submit_btn.grid(row = 10, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
+    
+    output_btn = Button(rPopup, text = 'Output All Rentals', command = rentalOutput)
+    output_btn.grid(row = 11, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 140)
+
+def rentalSubmit():
+    rentalSubmit_conn = sqlite3.connect('car_rental.db') # connecting to database
+    rentalSubmit_cur = rentalSubmit_conn.cursor() # cursor
+
+    # executing command to insert new vehicle
+    rentalSubmit_cur.execute("INSERT INTO RENTAL VALUES (:CustID, :VehicleID, :startDate, :orderDate, :rentalType, :qty,      :returnDate, :totalAmount, :paymentDate, :returned) ",
+	{ 
+    'CustID': custID.get(),
+		'VehicleID': vehicleID.get(), 
+    'startDate' : startDate.get(),
+    'orderDate' : orderDate.get(),
+    'rentalType' : rentalType.get(),
+    'qty' : quantity.get(),
+    'returnDate' : returnDate.get(),
+    'totalAmount' : totalAmount.get(),
+    'paymentDate' : paymentDate.get(),
+    'returned' : returned.get(),
+
+	})
+    rentalSubmit_conn.commit() # commit changes
+    rentalSubmit_conn.close() # close the DB connection
+
+# outputing vehicles just to see if adding new vehicle worked
+# REMOVE LATER
+def rentalOutput():
+	global rOut
+
+	rOut = Toplevel(rPopup)
+	rOut.title("Rental Output")
+	rOut.geometry("500x500")
+
+	# ---- implementing a scroll bar to be able to see all vehicles ----
+
+	mainFrame = Frame(rOut) # creating a main frame
+	mainFrame.pack(fill = BOTH, expand = 1) # similar to grid, just more flexible
+	# creating a canvas, can't just place scroll onto a window
+	canvas = Canvas(mainFrame)
+	canvas.pack(side = LEFT, fill = BOTH, expand = 1)
+	# adding a scroll bar to the canvas
+	scroll = ttk.Scrollbar(mainFrame, orient = VERTICAL, command = canvas.yview)
+	scroll.pack(side = RIGHT, fill = Y)
+	# configuring canvas
+	canvas.configure(yscrollcommand = scroll.set)
+	canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion = canvas.bbox('all')))
+	# creating second frame inside canvas, this is where output goes
+	secondFrame = Frame(canvas)
+	# adding second frame to a window in the canvas
+	canvas.create_window((0,0), window = secondFrame, anchor = "nw")
+  # --------------------------------------------------------------------
+
+	# connecting to database
+	rOut_conn = sqlite3.connect('car_rental.db')
+	rOut_cur = rOut_conn.cursor() # cursor
+
+	# executing command to output all customers
+	rOut_cur.execute("SELECT * FROM RENTAL;",)
+
+	output_records = rOut_cur.fetchall()
+	print_record = ''
+
+	# integers need to be converted to strings before able to be output
+	for output in output_records:
+		print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "   " + str(output[5]) + "   " + str(output[6]) + "   " + str(output[7]) + "   " + str(output[8]) + "   " + str(output[9]) +  "\n"
+
+	rOut_label = Label(secondFrame, text = print_record)
+	rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 100)
+
+	rOut_conn.commit() # commit changes
+	rOut_conn.close() # close the DB connection
 
 # ------------------------------------------- RETURN CAR --------------------------------------------
 
