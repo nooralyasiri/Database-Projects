@@ -21,7 +21,10 @@ QUERY 2:
 QUERY 3:
      • ADD ALL INFORMATION ABOUT NEW RENTAL RESERVATION 
       (CustID, VehicleID, StartDate, OrderDate, RentalType, Quantity, 
-       ReturnDate, TotalAmount, PaymentDate, Returned)
+       ReturnDate, TotalAmount, PaymentDate, Returned) 
+       -- FIRST PART: COMPLETE
+       
+       -- CURRENTLY WORKING ON SECOND PART BELOW
        
      • MUST FIND FREE VEHICLE OF APPROPRIATE TYPE AND CATEGORY FOR SPECIFIC RENTAL PERIOD
      • ASSUME CUSTOMER HAS THE RIGHT TO PAY AT EITHER ORDER OR RETURN DATE
