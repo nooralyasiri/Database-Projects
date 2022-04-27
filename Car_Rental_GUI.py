@@ -106,7 +106,7 @@ def addVehicle():
 
 	vPopup = Toplevel(root) # creating new window from root
 	vPopup.title("New Vehicle")
-	vPopup.geometry("415x375")
+	vPopup.geometry("420x350")
 
 	# ---------------------- TEXT BOXES AND LABELS ----------------------
 
@@ -147,7 +147,7 @@ def addVehicle():
 	submit_btn.grid(row = 5, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
 
 	output_btn = Button(vPopup, text = 'Output All Vehicles', command = vehicleOutput)
-	output_btn.grid(row = 6, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 140)
+	output_btn.grid(row = 6, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
 
 
 def vehicleSubmit():
@@ -212,7 +212,7 @@ def vehicleOutput():
 		print_record += output[0]+ "   " + output[1] +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) +"\n"
 
 	vOut_label = Label(secondFrame, text = print_record)
-	vOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 100)
+	vOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 70)
 
 	vOut_conn.commit() # commit changes
 	vOut_conn.close() # close the DB connection
@@ -233,7 +233,7 @@ def addRental():
 
     rPopup = Toplevel(root) # creating new window from root
     rPopup.title("New Rental")
-    rPopup.geometry("800x800")
+    rPopup.geometry("450x600")
 
     # ---------------------- TEXT BOXES AND LABELS ----------------------
 
@@ -305,7 +305,7 @@ def addRental():
     submit_btn.grid(row = 10, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
     
     output_btn = Button(rPopup, text = 'Output All Rentals', command = rentalOutput)
-    output_btn.grid(row = 11, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 140)
+    output_btn.grid(row = 11, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
 
 def rentalSubmit():
     rentalSubmit_conn = sqlite3.connect('car_rental.db') # connecting to database
@@ -376,7 +376,7 @@ def rentalOutput():
 		print_record += str(output[0])+ "   " + str(output[1])  + "   " + str(output[2]) + "   " + str(output[3])+  "\n"
 
 	rOut_label = Label(secondFrame, text = print_record)
-	rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 100)
+	rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 140)
 
 	rOut_conn.commit() # commit changes
 	rOut_conn.close() # close the DB connection
