@@ -1,4 +1,3 @@
-from ast import Lambda
 from tkinter import *
 from tkinter import ttk
 
@@ -28,7 +27,7 @@ def addCustomer():
 	cPopup.geometry("425x250")
 
 	# ---------------------- TEXT BOXES AND LABELS ----------------------
-    # customer name
+	# customer name
 	custName = Entry(cPopup, width = 30) # creates text box
 	custName.grid(row = 0, column = 1, pady = 20) # location of text box
 	custName_label = Label(cPopup, text = 'Name: ') # label text box
@@ -42,7 +41,7 @@ def addCustomer():
 
 	# -------------------------------------------------------------------
 
-    # buttons
+	# buttons
 	submit_btn = Button(cPopup, text = 'Add Customer ', command = custSubmit)
 	submit_btn.grid(row = 3, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
 
@@ -54,7 +53,7 @@ def custSubmit():
 	custSubmit_conn = sqlite3.connect('car_rental.db') # connecting to database
 	custSubmit_cur = custSubmit_conn.cursor() # cursor
 
-    # executing command to insert new customer
+    	# executing command to insert new customer
 	custSubmit_cur.execute("INSERT INTO CUSTOMER VALUES (NULL, :Name, :Phone) ",
 	{ 
 		'Name': custName.get(), # grabs data from custName and inserts data into Name in database
