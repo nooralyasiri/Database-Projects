@@ -23,7 +23,7 @@ def addCustomer():
 
     cPopup = Toplevel(root) # creating new window from root
     cPopup.title("New Customer")
-    cPopup.geometry("800x800")
+    cPopup.geometry("450x800")
 
     # customer name
     custName = Entry(cPopup, width = 30) # creates text box
@@ -44,30 +44,28 @@ def addCustomer():
     output_btn.grid(row = 4, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 140)
 
 def custSubmit():
-    # connecting to database
-	custSubmit_conn = sqlite3.connect('car_rental.db')
-	custSubmit_cur = custSubmit_conn.cursor()
+	custSubmit_conn = sqlite3.connect('car_rental.db') # connecting to database
+	custSubmit_cur = custSubmit_conn.cursor() # cursor
 
     # executing command to insert new customer
 	custSubmit_cur.execute("INSERT INTO CUSTOMER VALUES (NULL, :Name, :Phone) ",
-		{ 
-			'Name': custName.get(), # grabs data from custName and inserts data into Name in database
-			'Phone': pNum.get(), # grabs from pNum and inserts data into Phone in database
-		})
+	{ 
+		'Name': custName.get(), # grabs data from custName and inserts data into Name in database
+		'Phone': pNum.get(), # grabs from pNum and inserts data into Phone in database
+	})
 
 	custSubmit_conn.commit() # commit changes
 	custSubmit_conn.close() # close the DB connection
 
 # outputing customers just to see if adding new customer worked
 def custOutput():
-    # connecting to database
-	custOutput_conn = sqlite3.connect('car_rental.db')
-	custOutput_cur = custOutput_conn.cursor()
+	custOutput_conn = sqlite3.connect('car_rental.db') # connecting to database
+	custOutput_cur = custOutput_conn.cursor() # cursor
 
     # executing command to output all customers
 	custOutput_cur.execute("SELECT Name, Phone FROM CUSTOMER;",)
 
-	output_records = custOutput_cur.fetchall() #
+	output_records = custOutput_cur.fetchall()
 	print_record = ''
 
 	for output in output_records:
