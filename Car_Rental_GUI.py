@@ -385,10 +385,88 @@ def rentalOutput():
 # ------------------------------------------- RETURN CAR --------------------------------------------
 
 def returnCar():
-    global returnPopup
+        global returnPopup
+    global returnDate
+    global custName
+    global vehicleID
+    global carDesc
+    global carYear
+    global carType
+    global category
+
     returnPopup = Toplevel(root) # creating new window from root
     returnPopup.title("Return Car")
     returnPopup.geometry("800x800")
+
+    #
+    returnDate = Entry(returnPopup, width = 30) 
+    returnDate.grid(row = 0, column = 1) 
+    returnDate_label = Label(returnPopup, text = 'Return Date: ') 
+    returnDate_label.grid(row = 0, column = 0, pady = 10) 
+
+    #Customer name (find a way to link name with id)
+    custName = Entry(returnPopup, width = 30) 
+    custName.grid(row = 1, column = 1) 
+    custName_label = Label(returnPopup, text = 'Name : ') 
+    custName_label.grid(row = 1, column = 0, pady = 10) 
+
+    # vehicle id
+    vehicleID = Entry(returnPopup, width = 30) 
+    vehicleID.grid(row = 2, column = 1) 
+    vehicleID_label = Label(returnPopup, text = 'Vehicle ID: ') 
+    vehicleID_label.grid(row = 2, column = 0, pady = 10) 
+
+	# car description  
+    carDesc = Entry(returnPopup, width = 30)
+    carDesc.grid(row = 3, column = 1)
+    carDesc_label = Label(returnPopup, text = 'Description: ')
+    carDesc_label.grid(row = 3, column = 0, pady = 10)
+
+	# year of car
+    carYear = Entry(returnPopup, width = 30)
+    carYear.grid(row = 4, column = 1)
+    carYear_label = Label(returnPopup, text = 'Year: ')
+    carYear_label.grid(row = 4, column = 0, pady = 10)
+
+	# car type
+    carType = Entry(returnPopup, width = 30)
+    carType.grid(row = 5, column = 1)
+    carType_label = Label(returnPopup, text = 'Type: ')
+    carType_label.grid(row = 5, column = 0, pady = 10)
+
+	# category of car
+    category = Entry(returnPopup, width = 30)
+    category.grid(row = 6, column = 1)
+    category_label = Label(returnPopup, text = 'Category: ')
+    category_label.grid(row = 6, column = 0, pady = 10)
+
+# -------------------------------------------------------------------
+
+    # buttons
+    submit_btn = Button(returnPopup, text = 'Return Car', command = UpdateRentals)
+    submit_btn.grid(row = 7, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
+
+    submit_btn = Button(returnPopup, text = 'Retrive Rentals', command = OutputRentals)
+    submit_btn.grid(row = 8, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
+
+def UpdateRentals():
+    Update_rental_conn = sqlite3.connect('car_rental.db') # connecting to database
+    Update_rental_cur = Update_rental_conn.cursor() # cursor
+
+    #Update_rental_cur.execute("UPDATE RENTAL SET ReturnDate = NULL WHERE " ),
+    
+
+    Update_rental_conn.commit()
+    Update_rental_conn.close() # close the DB connection
+
+def OutputRentals():
+    OutputRentals_conn = sqlite3.connect('car_rental.db') # connecting to database
+    OutputRentals_cur = OutputRentals_conn.cursor() # cursor
+
+    #OutputRentals_cur.execute("SELECT * FROM VEHICLE;",),
+    
+    OutputRentals_conn.commit() # commit changes
+    OutputRentals_conn.close() # close the DB connection
 
 # ------------------------------------------- VIEW DATA ---------------------------------------------
 
