@@ -23,7 +23,7 @@ def addCustomer():
 
     cPopup = Toplevel(root) # creating new window from root
     cPopup.title("New Customer")
-    cPopup.geometry("450x800")
+    cPopup.geometry("450x400")
 
     # customer name
     custName = Entry(cPopup, width = 30) # creates text box
@@ -58,7 +58,13 @@ def custSubmit():
 	custSubmit_conn.close() # close the DB connection
 
 # outputing customers just to see if adding new customer worked
+# REMOVE LATER
 def custOutput():
+	global cOut
+	cOut = Toplevel(cPopup)
+	cOut.title("New Customer")
+	cOut.geometry("400x600")
+
 	custOutput_conn = sqlite3.connect('car_rental.db') # connecting to database
 	custOutput_cur = custOutput_conn.cursor() # cursor
 
@@ -71,8 +77,8 @@ def custOutput():
 	for output in output_records:
 		print_record += str(output[0]+ "   " + output[1] + "\n")
 
-	custOutput_label = Label(cPopup, text = print_record)
-	custOutput_label.grid(row = 9, column = 0, columnspan = 2)
+	custOutput_label = Label(cOut, text = print_record)
+	custOutput_label.grid(row = 1, column = 0, columnspan = 2)
 
 	custOutput_conn.commit() # commit changes
 	custOutput_conn.close() # close the DB connection
