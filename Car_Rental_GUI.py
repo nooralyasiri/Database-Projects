@@ -359,14 +359,19 @@ def rentalOutput():
 	# connecting to database
 	rOut_conn = sqlite3.connect('car_rental.db')
 	rOut_cur = rOut_conn.cursor() # cursor
-
-	# executing command to output type, category, startDate, returnDate
+	
+	# executing command to output all rentals
+	# rOut_cur.execute("SELECT * FROM RENTAL;",)
+	# executing command to output type, category, startDate, returnDate JUST TO SEE IF WE CAN CONNECT TO VEHICLES. CURRENTLY WORKS.
 	rOut_cur.execute("SELECT V.Type, V.Category, startDate, returnDate FROM Vehicle as V, RENTAL as R WHERE V.VehicleID=R.VehicleID;",)
 
 	output_records = rOut_cur.fetchall()
 	print_record = ''
-
-	# integers need to be converted to strings before able to be output
+	
+	
+	# integers need to be converted to strings before able to be output /  UNCOMMENT TO GET ALL RENTALS AS OUTPUT
+	# for output in output_records:
+		# print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "   " + str(output[5]) + "   " + str(output[6]) + "   " + str(output[7]) + "   " + str(output[8]) + "   " + str(output[9]) +  "\n"
 	for output in output_records:
 		print_record += str(output[0])+ "   " + str(output[1])  + "   " + str(output[2]) + "   " + str(output[3])+  "\n"
 
