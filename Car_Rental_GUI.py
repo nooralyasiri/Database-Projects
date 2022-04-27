@@ -24,7 +24,7 @@ def addCustomer():
 
 	cPopup = Toplevel(root) # creating new window from root
 	cPopup.title("New Customer")
-	cPopup.geometry("425x250")
+	cPopup.geometry("500x250")
 
 	# ---------------------- TEXT BOXES AND LABELS ----------------------
 	# customer name
@@ -43,7 +43,7 @@ def addCustomer():
 
 	# buttons
 	submit_btn = Button(cPopup, text = 'Add Customer ', command = custSubmit)
-	submit_btn.grid(row = 3, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
+	submit_btn.grid(row = 3, column = 0, columnspan = 2, pady = 30, padx = 30, ipadx = 160)
 
 	output_btn = Button(cPopup, text = 'Output all Customers', command = custOutput)
 	output_btn.grid(row = 4, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 140)
@@ -88,7 +88,7 @@ def custOutput():
 		print_record += str(output[0]) + "   " + output[1] + "   " + output[2] + "\n"
 
 	custOutput_label = Label(cOut, text = print_record)
-	custOutput_label.grid(row = 1, column = 1, ipadx = 100)
+	custOutput_label.grid(row = 1, column = 1, ipadx = 75)
 
 	custOutput_conn.commit() # commit changes
 	custOutput_conn.close() # close the DB connection
