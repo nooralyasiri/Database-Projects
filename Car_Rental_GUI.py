@@ -1,7 +1,9 @@
+from inspect import getcallargs
 from tkinter import *
 from tkinter import ttk
 
 import sqlite3
+from webbrowser import get
 
 
 # create window
@@ -24,7 +26,7 @@ def addCustomer():
 
 	cPopup = Toplevel(root) # creating new window from root
 	cPopup.title("New Customer")
-	cPopup.geometry("500x250")
+	cPopup.geometry("350x210")
 
 	# ---------------------- TEXT BOXES AND LABELS ----------------------
 	# customer name
@@ -43,10 +45,10 @@ def addCustomer():
 
 	# buttons
 	submit_btn = Button(cPopup, text = 'Add Customer ', command = custSubmit)
-	submit_btn.grid(row = 3, column = 0, columnspan = 2, pady = 30, padx = 30, ipadx = 160)
+	submit_btn.grid(row = 3, column = 0, columnspan = 2, pady = 20, padx = 30, ipadx = 100)
 
 	output_btn = Button(cPopup, text = 'Output all Customers', command = custOutput)
-	output_btn.grid(row = 4, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 140)
+	output_btn.grid(row = 4, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 80)
 
 
 def custSubmit():
@@ -106,7 +108,7 @@ def addVehicle():
 
 	vPopup = Toplevel(root) # creating new window from root
 	vPopup.title("New Vehicle")
-	vPopup.geometry("420x350")
+	vPopup.geometry("315x360")
 
 	# ---------------------- TEXT BOXES AND LABELS ----------------------
 
@@ -144,10 +146,10 @@ def addVehicle():
 
 	# buttons
 	submit_btn = Button(vPopup, text = 'Add Vehicle ', command = vehicleSubmit)
-	submit_btn.grid(row = 5, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
+	submit_btn.grid(row = 5, column = 0, columnspan = 2, pady = 30, padx = 18, ipadx = 100)
 
 	output_btn = Button(vPopup, text = 'Output All Vehicles', command = vehicleOutput)
-	output_btn.grid(row = 6, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
+	output_btn.grid(row = 6, column = 0, columnspan = 2, pady = 10, padx = 18, ipadx = 80)
 
 
 def vehicleSubmit():
@@ -314,17 +316,18 @@ def rentalSubmit():
     # executing command to insert new rental
     rentalSubmit_cur.execute("INSERT INTO RENTAL VALUES (:CustID, :VehicleID, :startDate, :orderDate, :rentalType, :qty, :returnDate, :totalAmount, :paymentDate, :returned) ",
 	{ 
-    'CustID': custID.get(),
+		'CustID': custID.get(),
 		'VehicleID': vehicleID.get(), 
-    'startDate' : startDate.get(),
-    'orderDate' : orderDate.get(),
-    'rentalType' : rentalType.get(),
-    'qty' : quantity.get(),
-    'returnDate' : returnDate.get(),
-    'totalAmount' : totalAmount.get(),
-    'paymentDate' : paymentDate.get(),
-    'returned' : returned.get(),
+		'startDate' : startDate.get(),
+		'orderDate' : orderDate.get(),
+		'rentalType' : rentalType.get(),
+		'qty' : quantity.get(),
+		'returnDate' : returnDate.get(),
+		'totalAmount' : totalAmount.get(),
+		'paymentDate' : paymentDate.get(),
+		'returned' : returned.get(),
 	})
+
     rentalSubmit_conn.commit() # commit changes
     rentalSubmit_conn.close() # close the DB connection
 
@@ -383,90 +386,210 @@ def rentalOutput():
 
 
 # ------------------------------------------- RETURN CAR --------------------------------------------
-
 def returnCar():
-        global returnPopup
-    global returnDate
-    global custName
-    global vehicleID
-    global carDesc
-    global carYear
-    global carType
-    global category
+	global returnPopup
+	global returnDate
+	global custName
+	global vehicleID
+	global carDesc
+	global carYear
+	global carType
+	global category
 
-    returnPopup = Toplevel(root) # creating new window from root
-    returnPopup.title("Return Car")
-    returnPopup.geometry("800x800")
+	returnPopup = Toplevel(root) # creating new window from root
+	returnPopup.title("Return Car")
+	returnPopup.geometry("350x445")
 
-    #
-    returnDate = Entry(returnPopup, width = 30) 
-    returnDate.grid(row = 0, column = 1) 
-    returnDate_label = Label(returnPopup, text = 'Return Date: ') 
-    returnDate_label.grid(row = 0, column = 0, pady = 10) 
+	# ---------------------- TEXT BOXES AND LABELS ----------------------
 
-    #Customer name (find a way to link name with id)
-    custName = Entry(returnPopup, width = 30) 
-    custName.grid(row = 1, column = 1) 
-    custName_label = Label(returnPopup, text = 'Name : ') 
-    custName_label.grid(row = 1, column = 0, pady = 10) 
+	returnDate = Entry(returnPopup, width = 30) 
+	returnDate.grid(row = 0, column = 1) 
+	returnDate_label = Label(returnPopup, text = 'Return Date: ') 
+	returnDate_label.grid(row = 0, column = 0, pady = 10) 
 
-    # vehicle id
-    vehicleID = Entry(returnPopup, width = 30) 
-    vehicleID.grid(row = 2, column = 1) 
-    vehicleID_label = Label(returnPopup, text = 'Vehicle ID: ') 
-    vehicleID_label.grid(row = 2, column = 0, pady = 10) 
+	# customer name (find a way to link name with id)
+	custName = Entry(returnPopup, width = 30) 
+	custName.grid(row = 1, column = 1) 
+	custName_label = Label(returnPopup, text = 'Name : ') 
+	custName_label.grid(row = 1, column = 0, pady = 10) 
+
+	# vehicle id
+	vehicleID = Entry(returnPopup, width = 30) 
+	vehicleID.grid(row = 2, column = 1) 
+	vehicleID_label = Label(returnPopup, text = 'Vehicle ID: ') 
+	vehicleID_label.grid(row = 2, column = 0, pady = 10) 
 
 	# car description  
-    carDesc = Entry(returnPopup, width = 30)
-    carDesc.grid(row = 3, column = 1)
-    carDesc_label = Label(returnPopup, text = 'Description: ')
-    carDesc_label.grid(row = 3, column = 0, pady = 10)
+	carDesc = Entry(returnPopup, width = 30)
+	carDesc.grid(row = 3, column = 1)
+	carDesc_label = Label(returnPopup, text = 'Description: ')
+	carDesc_label.grid(row = 3, column = 0, pady = 10)
 
 	# year of car
-    carYear = Entry(returnPopup, width = 30)
-    carYear.grid(row = 4, column = 1)
-    carYear_label = Label(returnPopup, text = 'Year: ')
-    carYear_label.grid(row = 4, column = 0, pady = 10)
+	carYear = Entry(returnPopup, width = 30)
+	carYear.grid(row = 4, column = 1)
+	carYear_label = Label(returnPopup, text = 'Year: ')
+	carYear_label.grid(row = 4, column = 0, pady = 10)
 
 	# car type
-    carType = Entry(returnPopup, width = 30)
-    carType.grid(row = 5, column = 1)
-    carType_label = Label(returnPopup, text = 'Type: ')
-    carType_label.grid(row = 5, column = 0, pady = 10)
+	carType = Entry(returnPopup, width = 30)
+	carType.grid(row = 5, column = 1)
+	carType_label = Label(returnPopup, text = 'Type: ')
+	carType_label.grid(row = 5, column = 0, pady = 10)
 
 	# category of car
-    category = Entry(returnPopup, width = 30)
-    category.grid(row = 6, column = 1)
-    category_label = Label(returnPopup, text = 'Category: ')
-    category_label.grid(row = 6, column = 0, pady = 10)
+	category = Entry(returnPopup, width = 30)
+	category.grid(row = 6, column = 1)
+	category_label = Label(returnPopup, text = 'Category: ')
+	category_label.grid(row = 6, column = 0, pady = 10)
 
-# -------------------------------------------------------------------
+	# -------------------------------------------------------------------
 
-    # buttons
-    submit_btn = Button(returnPopup, text = 'Return Car', command = UpdateRentals)
-    submit_btn.grid(row = 7, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
+	# buttons
+	get_btn = Button(returnPopup, text = 'Retrieve Rental', command = getRentals)
+	get_btn.grid(row = 7, column = 0, columnspan = 2, pady = 10, padx = 40, ipadx = 89)
 
-    submit_btn = Button(returnPopup, text = 'Retrive Rentals', command = OutputRentals)
-    submit_btn.grid(row = 8, column = 0, columnspan = 2, pady = 30, padx = 10, ipadx = 140)
+	pay_btn = Button(returnPopup, text = 'Pay Rental', command = payRentals)
+	pay_btn.grid(row = 8, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 101)
 
+	submit_btn = Button(returnPopup, text = 'Update Rental', command = UpdateRentals)
+	submit_btn.grid(row = 9, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 95)
+
+
+def getRentals():
+	global getOut
+	global paid
+
+	getOut = Toplevel(returnPopup)
+	getOut.title("Rental")
+	getOut.geometry("500x500")
+
+	getRentals_conn = sqlite3.connect('car_rental.db') # connecting to database
+	getRentals_cur = getRentals_conn.cursor() # cursor
+
+	getRentals_cur.execute("SELECT TotalAmount, PaymentDate FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? AND Category = ?; ",
+	(
+		returnDate.get(),
+		custName.get(),
+		vehicleID.get(), 
+		carDesc.get(),
+		carYear.get(),
+		carType.get(),
+		category.get(),
+	))
+
+	output_records = getRentals_cur.fetchall()
+	print_record = ''
+
+	for output in output_records:
+		print_record += "Amount due: $" + str(output[0]) + "\n"
+
+	# ADD COMMAND SO IS PAYMENTDATE IS NULL, THEN DO THE FOLLOWING.. CURRENTLY DOES NOT WORK, TESTING
+
+	# for output in output_records:
+	# 	if(output[1] is not None):
+	# 		print_record += "Amount due: $" + str(output[0]) + "\n"
+	# 		paid = 0
+	# 	else:
+	# 		print_record += "Amount due: $0 \n"
+	# 		paid = 1
+
+	custOutput_label = Label(getOut, text = print_record)
+	custOutput_label.grid(row = 1, column = 1, ipadx = 75)
+	getRentals_conn.commit() # commit changes
+	getRentals_conn.close() # close the DB connection
+
+# DOESNT WORK YET UNTIL I CAN GET THE COMMAND WORKING TO CHANGE PAID = 1 OR = 0
+def payRentals():
+	global payOut
+
+	payOut = Toplevel(returnPopup)
+	payOut.title("Rental")
+	payOut.geometry("500x500")
+
+	payrental_conn = sqlite3.connect('car_rental.db') # connecting to database
+	payrental_cur = payrental_conn.cursor() # cursor
+
+	if paid == 0:
+		payrental_cur.execute("SELECT TotalAmount FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?; ",
+		(
+			returnDate.get(),
+			custName.get(),
+			vehicleID.get(), 
+			carDesc.get(),
+			carYear.get(),
+			carType.get(),
+			category.get(),
+		))
+
+		output_records = payrental_cur.fetchall()
+		print_record = ''
+
+		for output in output_records:
+				print_record += "Payment of : $" + output[0] + " has been accepted!\n"
+
+		payrental_cur.execute("UPDATE RENTAL SET PaymentDate = ReturnDate")
+
+		paid = 1
+	
+	elif paid == 1:
+		print("Rental has already been paid for.")
+	
+	else:
+		print("Please retrieve car rental first!")
+
+	payrental_conn.commit() # commit changes
+	payrental_conn.close() # close the DB connection
+
+# DOESNT WORK YET UNTIL I CAN GET THE COMMAND WORKING TO CHANGE PAID = 1 OR = 0
 def UpdateRentals():
-    Update_rental_conn = sqlite3.connect('car_rental.db') # connecting to database
-    Update_rental_cur = Update_rental_conn.cursor() # cursor
+	global updateOut
 
-    #Update_rental_cur.execute("UPDATE RENTAL SET ReturnDate = NULL WHERE " ),
-    
+	updateOut = Toplevel(returnPopup)
+	updateOut.title("Rental")
+	updateOut.geometry("500x500")
 
-    Update_rental_conn.commit()
-    Update_rental_conn.close() # close the DB connection
+	Update_rental_conn = sqlite3.connect('car_rental.db') # connecting to database
+	Update_rental_cur = Update_rental_conn.cursor() # cursor
+	
 
-def OutputRentals():
-    OutputRentals_conn = sqlite3.connect('car_rental.db') # connecting to database
-    OutputRentals_cur = OutputRentals_conn.cursor() # cursor
+	if paid == 1:
+		Update_rental_cur.execute("UPDATE RENTAL SET Returned = 1FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?;",
+		(
+			returnDate.get(),
+			custName.get(),
+			vehicleID.get(), 
+			carDesc.get(),
+			carYear.get(),
+			carType.get(),
+			category.get(),
+		))
 
-    #OutputRentals_cur.execute("SELECT * FROM VEHICLE;",),
-    
-    OutputRentals_conn.commit() # commit changes
-    OutputRentals_conn.close() # close the DB connection
+		Update_rental_cur.execute("SELECT V.VehicleID, Description, Year, Type, Category FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?;",
+		(
+			returnDate.get(),
+			custName.get(),
+			vehicleID.get(), 
+			carDesc.get(),
+			carYear.get(),
+			carType.get(),
+			category.get(),
+		))
+
+		output_records = Update_rental_cur.fetchall()
+		print_record = ''
+
+		for output in output_records:
+				print_record += "Car rental has been returned! \nVIN: " + output[1] + "\nDescription" + output[2] + "\nYear" + str(output[3]) + "\nType" + str(output[4]) + "\nCategory" + str(output[5])
+
+	elif paid == 0:
+		print("Please pay for the rental first.")
+	
+	else:
+		print("Please retrieve car rental first!")
+
+	Update_rental_conn.commit()
+	Update_rental_conn.close() # close the DB connection
 
 # ------------------------------------------- VIEW DATA ---------------------------------------------
 
