@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from tkinter import *
 from tkinter import ttk
 
@@ -363,19 +364,19 @@ def rentalOutput():
 	rOut_cur = rOut_conn.cursor() # cursor
 	
 	# executing command to output all rentals
-	# rOut_cur.execute("SELECT * FROM RENTAL;",)
+	rOut_cur.execute("SELECT * FROM RENTAL;",)
 	# executing command to output type, category, startDate, returnDate JUST TO SEE IF WE CAN CONNECT TO VEHICLES. CURRENTLY WORKS.
-	rOut_cur.execute("SELECT V.Type, V.Category, startDate, returnDate FROM Vehicle as V, RENTAL as R WHERE V.VehicleID=R.VehicleID;",)
+	# rOut_cur.execute("SELECT V.Type, V.Category, startDate, returnDate FROM Vehicle as V, RENTAL as R WHERE V.VehicleID=R.VehicleID;",)
 
 	output_records = rOut_cur.fetchall()
 	print_record = ''
 	
 	
 	# integers need to be converted to strings before able to be output /  UNCOMMENT TO GET ALL RENTALS AS OUTPUT
-	# for output in output_records:
-		# print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "   " + str(output[5]) + "   " + str(output[6]) + "   " + str(output[7]) + "   " + str(output[8]) + "   " + str(output[9]) +  "\n"
 	for output in output_records:
-		print_record += str(output[0])+ "   " + str(output[1])  + "   " + str(output[2]) + "   " + str(output[3])+  "\n"
+		print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "   " + str(output[5]) + "   " + str(output[6]) + "   " + str(output[7]) + "   " + str(output[8]) + "   " + str(output[9]) +  "\n"
+	# for output in output_records:
+	# 	print_record += str(output[0])+ "   " + str(output[1])  + "   " + str(output[2]) + "   " + str(output[3])+  "\n"
 
 	rOut_label = Label(secondFrame, text = print_record)
 	rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 140)
@@ -457,16 +458,18 @@ def returnCar():
 
 def getRentals():
 	global getOut
-	global paid
 
 	getOut = Toplevel(returnPopup)
 	getOut.title("Rental")
-	getOut.geometry("500x500")
+	getOut.geometry("200x100")
 
 	getRentals_conn = sqlite3.connect('car_rental.db') # connecting to database
 	getRentals_cur = getRentals_conn.cursor() # cursor
 
-	getRentals_cur.execute("SELECT TotalAmount, PaymentDate FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? AND Category = ?; ",
+	getRentals_cur.execute("""SELECT SUM(TotalAmount), PaymentDate 
+							FROM Vehicle as V, RENTAL as R, CUSTOMER as C 
+							WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID 
+							AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? AND Category = ?; """,
 	(
 		returnDate.get(),
 		custName.get(),
@@ -481,111 +484,138 @@ def getRentals():
 	print_record = ''
 
 	for output in output_records:
-		print_record += "Amount due: $" + str(output[0]) + "\n"
+		# if customer has not paid yet
+		if(output[1] is None):
+			print_record += "Amount due: $" + str(output[0]) + "\n"
+		# if customer has already paid
+		elif(output[1] is not None):
+			print_record += "Amount due: $0 \n"
 
-	# ADD COMMAND SO IS PAYMENTDATE IS NULL, THEN DO THE FOLLOWING.. CURRENTLY DOES NOT WORK, TESTING
+	getRentals_label = Label(getOut, text = print_record)
+	getRentals_label.grid(row = 1, column = 1, ipadx = 50, ipady = 35)
 
-	# for output in output_records:
-	# 	if(output[1] is not None):
-	# 		print_record += "Amount due: $" + str(output[0]) + "\n"
-	# 		paid = 0
-	# 	else:
-	# 		print_record += "Amount due: $0 \n"
-	# 		paid = 1
-
-	custOutput_label = Label(getOut, text = print_record)
-	custOutput_label.grid(row = 1, column = 1, ipadx = 75)
 	getRentals_conn.commit() # commit changes
 	getRentals_conn.close() # close the DB connection
 
-# DOESNT WORK YET UNTIL I CAN GET THE COMMAND WORKING TO CHANGE PAID = 1 OR = 0
+
+# DO NOT EXECUTE THIS. IF EXECUTED, YOU NEED TO REPLACE YOUR DB FILE WITH THE BACKUP. 
+# FIGURING OUT THE UPDATE QUERY SO IT UPDATES CORRECTLY
 def payRentals():
 	global payOut
 
 	payOut = Toplevel(returnPopup)
 	payOut.title("Rental")
-	payOut.geometry("500x500")
+	payOut.geometry("300x100")
 
 	payrental_conn = sqlite3.connect('car_rental.db') # connecting to database
 	payrental_cur = payrental_conn.cursor() # cursor
 
-	if paid == 0:
-		payrental_cur.execute("SELECT TotalAmount FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?; ",
-		(
-			returnDate.get(),
-			custName.get(),
-			vehicleID.get(), 
-			carDesc.get(),
-			carYear.get(),
-			carType.get(),
-			category.get(),
-		))
+	payrental_cur.execute("""SELECT TotalAmount, PaymentDate
+							FROM Vehicle as V, RENTAL as R, CUSTOMER as C 
+							WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID 
+							AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? AND Category = ?; """,
+	(
+		returnDate.get(),
+		custName.get(),
+		vehicleID.get(), 
+		carDesc.get(),
+		carYear.get(),
+		carType.get(),
+		category.get(),
+	))
 
-		output_records = payrental_cur.fetchall()
-		print_record = ''
+	output_records = payrental_cur.fetchall()
+	print_record = ''
 
-		for output in output_records:
-				print_record += "Payment of : $" + output[0] + " has been accepted!\n"
+	for output in output_records:
+		# if customer has not paid yet
+		if(output[1] is None):
+			print_record += "Payment of : $" + str(output[0]) + " has been accepted!\n"
+			payrental_cur.execute("""UPDATE RENTAL 
+							SET PaymentDate = :rdate
+							FROM Vehicle as V, RENTAL as R, CUSTOMER as C 
+							WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID 
+							AND R.ReturnDate = :rdate AND Name = :Name AND V.VehicleID = :VehicleID 
+							AND Description = :Description AND Year = :Year AND Type = :Type AND Category = :Category; """,
+			{
+				'rdate': returnDate.get(),
+				'Name':custName.get(),
+				'VehicleID': vehicleID.get(), 
+				'Description': carDesc.get(),
+				'Year': carYear.get(),
+				'Type': carType.get(),
+				'Category': category.get(),
+			})
 
-		payrental_cur.execute("UPDATE RENTAL SET PaymentDate = ReturnDate")
+		# if customer has already paid
+		elif(output[1] is not None):
+			print_record += "Rental has already been paid for."
 
-		paid = 1
-	
-	elif paid == 1:
-		print("Rental has already been paid for.")
-	
-	else:
-		print("Please retrieve car rental first!")
+	payRental_label = Label(payOut, text = print_record)
+	payRental_label.grid(row = 1, column = 1, ipadx = 60, ipady = 35)
 
 	payrental_conn.commit() # commit changes
 	payrental_conn.close() # close the DB connection
 
-# DOESNT WORK YET UNTIL I CAN GET THE COMMAND WORKING TO CHANGE PAID = 1 OR = 0
+# WORK IN PROGRESS
 def UpdateRentals():
 	global updateOut
 
 	updateOut = Toplevel(returnPopup)
 	updateOut.title("Rental")
-	updateOut.geometry("500x500")
+	updateOut.geometry("300x200")
 
 	Update_rental_conn = sqlite3.connect('car_rental.db') # connecting to database
 	Update_rental_cur = Update_rental_conn.cursor() # cursor
 	
 
-	if paid == 1:
-		Update_rental_cur.execute("UPDATE RENTAL SET Returned = 1FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?;",
-		(
-			returnDate.get(),
-			custName.get(),
-			vehicleID.get(), 
-			carDesc.get(),
-			carYear.get(),
-			carType.get(),
-			category.get(),
-		))
+	Update_rental_cur.execute("""SELECT PaymentDate, Returned, V.VehicleID, Description, Year, Type, Category 
+		FROM Vehicle as V, RENTAL as R, CUSTOMER as C 
+		WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID 
+		AND R.ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?;""",
+	(
+		returnDate.get(),
+		custName.get(),
+		vehicleID.get(), 
+		carDesc.get(),
+		carYear.get(),
+		carType.get(),
+		category.get(),
+	))
 
-		Update_rental_cur.execute("SELECT V.VehicleID, Description, Year, Type, Category FROM Vehicle as V, RENTAL as R, CUSTOMER as C WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID AND ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?;",
-		(
-			returnDate.get(),
-			custName.get(),
-			vehicleID.get(), 
-			carDesc.get(),
-			carYear.get(),
-			carType.get(),
-			category.get(),
-		))
+	output_records = Update_rental_cur.fetchall()
+	print_record = ''
 
-		output_records = Update_rental_cur.fetchall()
-		print_record = ''
+	for output in output_records:
+		# if rental has been paid for
+		if(output[0] is not None):
+			# if rental has not been returned yet
+			if(output[1] == 0):
+				print_record += "Car rental has been returned! \nRENTAL CAR INFO\nVIN: " + output[2] + "\nDescription: " + output[3] + "\nYear: " + str(output[4]) + "\nType: " + str(output[5]) + "\nCategory: " + str(output[6])
+				
+				Update_rental_cur.execute("""UPDATE RENTAL SET Returned = 1 
+					FROM Vehicle as V, RENTAL as R, CUSTOMER as C 
+					WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID 
+					AND R.ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?;""",
+				(
+					returnDate.get(),
+					custName.get(),
+					vehicleID.get(), 
+					carDesc.get(),
+					carYear.get(),
+					carType.get(),
+					category.get(),
+				))
+			# if rental has already been returned
+			elif(output[1] == 1):
+				print_record += "Car has already been returned."
+		# if rental has not been paid for
+		elif(output[0] is None):
+			print_record += "Please pay for the rental first."
 
-		for output in output_records:
-				print_record += "Car rental has been returned! \nVIN: " + output[1] + "\nDescription" + output[2] + "\nYear" + str(output[3]) + "\nType" + str(output[4]) + "\nCategory" + str(output[5])
 
-	elif paid == 0:
-		print("Please pay for the rental first.")
-	
-	else:
-		print("Please retrieve car rental first!")
+	Update_rental_label = Label(updateOut, text = print_record)
+	Update_rental_label.grid(row = 1, column = 1, ipadx = 65, ipady = 35)
 
 	Update_rental_conn.commit()
 	Update_rental_conn.close() # close the DB connection
