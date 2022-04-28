@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 import sqlite3
-from webbrowser import get
+
 
 
 # create window
