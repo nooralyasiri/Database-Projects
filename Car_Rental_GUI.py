@@ -1,4 +1,3 @@
-from inspect import getcallargs
 from tkinter import *
 from tkinter import ttk
 
