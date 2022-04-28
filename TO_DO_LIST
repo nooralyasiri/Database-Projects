@@ -34,13 +34,13 @@ QUERY 3:
 
 
 QUERY 4: 
-     -- Structure is done just need query part (got kinda confused on what is being asked)
      • HANDLE RETURN OF RENTED CAR
      • PRINT TOTAL CUSTOMER PAYMENT DUE FOR THAT RENTAL 
      • ENTER IT IN DB
      • UPDATE RETURNED ATTRIBUTE ACCORDINGLY 
      • NEED TO BE ABLE TO RETRIEVE RENTAL BY: ReturnDate, Customer Name (table needs the ID), AND Vehicle Info
-
+     
+-- STRUCTURE COMPLETED, FIGURING OUT HOW TO HANDLE IF CAR HAS BEEN PAID OR NOT
 
 /* ======================================================================= */
 
