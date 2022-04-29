@@ -51,10 +51,12 @@ QUERY 5:
      • PART A
         ○ FOR EVERY CUSTOMER, LIST: CustID, Customer Name, AND IF there is any remaining balance 
           -- WORK IN PROGRESS... FIGURING OUT HOW TO GET CUSTOMERS WHO HAVENT RENTED A CAR YET AND GET THEIR REMAINING BALANCE AS NULL
-        
+          -- Would using case like we did for the queries help?
         ○ USER HAS THE RIGHT TO SEARCH BY: CustID, Customer Name, PART OF Name, OR Run the query with NO filters/criteria.
         ○ AMOUNT NEEDS TO BE IN US DOLLARS
+               --try SELECT FORMAT("$%.2f", Remaining balace);
         ○ FOR CUSTOMERS WITH (0) OR NULL BALANCE: YOU NEED TO RETURN $0.00 DOLLARS
+               -- another case query?
         ○ MAKE SURE QUERY RETURNS MEANINGFUL ATTRIBUTE NAMES 
         ○ IN THE CASE THAT USER PROVIDES NO FILTERS, ORDER THE RESULTS BASED ON BALANCE AMOUNT
         ○ RETURN ALL RECORDS 
