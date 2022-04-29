@@ -497,8 +497,6 @@ def getRentals():
 	getRentals_conn.close() # close the DB connection
 
 
-# DO NOT EXECUTE THIS. IF EXECUTED, YOU NEED TO REPLACE YOUR DB FILE WITH THE BACKUP. 
-# FIGURING OUT THE UPDATE QUERY SO IT UPDATES CORRECTLY
 def payRentals():
 	global payOut
 
@@ -529,21 +527,19 @@ def payRentals():
 	for output in output_records:
 		# if customer has not paid yet
 		if(output[1] is None):
-			print_record += "Payment of : $" + str(output[0]) + " has been accepted!\n"
-			payrental_cur.execute("""UPDATE RENTAL 
-							SET PaymentDate = :rdate
-							FROM Vehicle as V, RENTAL as R, CUSTOMER as C 
-							WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID 
-							AND R.ReturnDate = :rdate AND Name = :Name AND V.VehicleID = :VehicleID 
-							AND Description = :Description AND Year = :Year AND Type = :Type AND Category = :Category; """,
+			print_record += "Payment of $" + str(output[0]) + " has been accepted!\n"
+			payrental_cur.execute("""UPDATE RENTAL as R
+									SET PaymentDate = :rdate
+									FROM CUSTOMER as C, VEHICLE as V
+									WHERE R.custID = C.custID
+										AND R.VehicleID = V.VehicleID
+										AND C.Name = :Name
+										AND V.VehicleID = :VehicleID
+										AND ReturnDate = :rdate; """,
 			{
 				'rdate': returnDate.get(),
 				'Name':custName.get(),
 				'VehicleID': vehicleID.get(), 
-				'Description': carDesc.get(),
-				'Year': carYear.get(),
-				'Type': carType.get(),
-				'Category': category.get(),
 			})
 
 		# if customer has already paid
@@ -556,7 +552,7 @@ def payRentals():
 	payrental_conn.commit() # commit changes
 	payrental_conn.close() # close the DB connection
 
-# WORK IN PROGRESS
+
 def UpdateRentals():
 	global updateOut
 
@@ -590,21 +586,21 @@ def UpdateRentals():
 		if(output[0] is not None):
 			# if rental has not been returned yet
 			if(output[1] == 0):
-				print_record += "Car rental has been returned! \nRENTAL CAR INFO\nVIN: " + output[2] + "\nDescription: " + output[3] + "\nYear: " + str(output[4]) + "\nType: " + str(output[5]) + "\nCategory: " + str(output[6])
-				
-				Update_rental_cur.execute("""UPDATE RENTAL SET Returned = 1 
-					FROM Vehicle as V, RENTAL as R, CUSTOMER as C 
-					WHERE V.VehicleID = R.VehicleID AND C.CustID = R.CustID 
-					AND R.ReturnDate = ? AND Name = ? AND V.VehicleID = ? AND Description = ? AND Year = ? AND Type = ? And Category = ?;""",
-				(
-					returnDate.get(),
-					custName.get(),
-					vehicleID.get(), 
-					carDesc.get(),
-					carYear.get(),
-					carType.get(),
-					category.get(),
-				))
+				print_record += "Car rental has been returned! \n\nRENTAL CAR INFO\n\nVIN: " + output[2] + "\nDescription: " + output[3] + "\nYear: " + str(output[4]) + "\nType: " + str(output[5]) + "\nCategory: " + str(output[6])
+				Update_rental_cur.execute("""UPDATE RENTAL as R
+												SET Returned = 1 
+												FROM CUSTOMER as C, VEHICLE as V
+												WHERE R.custID = C.custID
+													AND R.VehicleID = V.VehicleID
+													AND C.Name = :Name
+													AND V.VehicleID = :VehicleID
+													AND ReturnDate = :rdate; """,
+				{
+					'rdate': returnDate.get(),
+					'Name':custName.get(),
+					'VehicleID': vehicleID.get(), 
+				})
+
 			# if rental has already been returned
 			elif(output[1] == 1):
 				print_record += "Car has already been returned."
@@ -614,7 +610,7 @@ def UpdateRentals():
 
 
 	Update_rental_label = Label(updateOut, text = print_record)
-	Update_rental_label.grid(row = 1, column = 1, ipadx = 65, ipady = 35)
+	Update_rental_label.grid(row = 1, column = 1, ipadx = 70, ipady = 35)
 
 	Update_rental_conn.commit()
 	Update_rental_conn.close() # close the DB connection
