@@ -40,7 +40,7 @@ QUERY 4:
      • UPDATE RETURNED ATTRIBUTE ACCORDINGLY 
      • NEED TO BE ABLE TO RETRIEVE RENTAL BY: ReturnDate, Customer Name (table needs the ID), AND Vehicle Info
      
--- STRUCTURE COMPLETED, FIGURING OUT HOW TO HANDLE IF CAR HAS BEEN PAID OR NOT
+-- STATUS: COMPLETE
 
 /* ======================================================================= */
 
