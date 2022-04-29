@@ -8,7 +8,7 @@ import sqlite3
 # create window
 root = Tk() # initiallizing creation of window
 root.title('CAR RENTAL DATABASE') # window title
-root.geometry("400x250") # size of window
+root.geometry("400x290") # size of window
 
 # connecting database
 car_rental_connect = sqlite3.connect('car_rental.db')
@@ -615,20 +615,64 @@ def UpdateRentals():
 	Update_rental_conn.commit()
 	Update_rental_conn.close() # close the DB connection
 
-# ------------------------------------------- VIEW DATA ---------------------------------------------
+# ------------------------------------------- CUSTOMER SEARCH ---------------------------------------------
 
-def viewData():
-    global viewPopup
-    viewPopup = Toplevel(root) # creating new window from root
-    viewPopup.title("Data") # rename this
-    viewPopup.geometry("800x800")
+# Testing out treeview, trying to get remaining balance
+# Search implementation after; scroll wheel to see all customers!
+def custSearch():
+	global csPopup
+	csPopup = Toplevel(root) # creating new window from root
+	csPopup.title("Customer Database")
+	csPopup.geometry("800x800")
+
+	# -------------------------------- creating treeview --------------------------------
+	custTree = ttk.Treeview(csPopup)
+	# defining columns
+	custTree['columns'] = ("ID", "Name", "Remaining Balance")
+
+	# formatting columns
+	custTree.column("#0", width = 0, stretch = NO)
+	custTree.column("ID", anchor = CENTER, width = 100)
+	custTree.column("Name", anchor = CENTER, width = 100)
+	#custTree.column("Remaining Balance", anchor = CENTER, width = 150)
+
+	# headings
+	custTree.heading("#0", text = "", anchor = W)
+	custTree.heading("ID", text = "Customer ID", anchor = CENTER)
+	custTree.heading("Name", text = "Name", anchor = CENTER)
+	#custTree.heading("Remaining Balance", text = "Remaining Balance", anchor = CENTER)
+	# -------------------------------------------------------------------------------------
+
+	#connect to database
+	custSearch_conn = sqlite3.connect('car_rental.db') # connecting to database
+	custSearch_cur = custSearch_conn.cursor() # cursor
+
+	# Adding data to view
+	custSearch_cur.execute("SELECT custID, Name FROM CUSTOMER;")
+	output_records = custSearch_cur.fetchall()
+	
+	count = 0
+	for output in output_records:
+		custTree.insert(parent = '', index = 'end', iid = count, text = "", values = (str(output[0]), output[1]))
+		count += 1
+
+	custTree.pack(pady = 20)
+		
+		
+# ------------------------------------------- Vehicle SEARCH ---------------------------------------------
+
+def vehicleSearch():
+    global vsPopup
+    vsPopup = Toplevel(root) # creating new window from root
+    vsPopup.title("Vehicle Database")
+    vsPopup.geometry("800x800")
 
 # ----------------------------------------- END OF FUNCTIONS -----------------------------------------
 
 # ------------------------------------------- ROOT BUTTONS -------------------------------------------
 
 custButton = Button(root, text = "Add Customer", command = addCustomer)
-custButton.pack(pady = 15)
+custButton.pack(pady = 10)
 
 vehicleButton = Button(root, text = "Add Vehicle", command = addVehicle)
 vehicleButton.pack(pady = 10)
@@ -639,7 +683,10 @@ rentalButton.pack(pady = 10)
 returnButton = Button(root, text = "Return Car Rental", command = returnCar)
 returnButton.pack(pady = 10)
 
-returnButton = Button(root, text = "View Data", command = viewData)
+returnButton = Button(root, text = "Customer Search", command = custSearch)
+returnButton.pack(pady = 10)
+
+returnButton = Button(root, text = "Vehicle Search", command = vehicleSearch)
 returnButton.pack(pady = 10)
 
 
