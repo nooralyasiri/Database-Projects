@@ -308,6 +308,14 @@ def addRental():
     output_btn = Button(rPopup, text = 'Output All Rentals', command = rentalOutput)
     output_btn.grid(row = 11, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
 
+    # -------------------------------------------------------------------
+    # output selected rentals 
+
+    check_btn = Button(rPopup, text = 'Output Selected Rentals', command = getRental)
+    check_btn.grid(row = 13, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
+
+    # -------------------------------------------------------------------
+
 def rentalSubmit():
     rentalSubmit_conn = sqlite3.connect('car_rental.db') # connecting to database
     rentalSubmit_cur = rentalSubmit_conn.cursor() # cursor
@@ -315,74 +323,103 @@ def rentalSubmit():
     # executing command to insert new rental
     rentalSubmit_cur.execute("INSERT INTO RENTAL VALUES (:CustID, :VehicleID, :startDate, :orderDate, :rentalType, :qty, :returnDate, :totalAmount, :paymentDate, :returned) ",
 	{ 
-		'CustID': custID.get(),
+    'CustID': custID.get(),
 		'VehicleID': vehicleID.get(), 
-		'startDate' : startDate.get(),
-		'orderDate' : orderDate.get(),
-		'rentalType' : rentalType.get(),
-		'qty' : quantity.get(),
-		'returnDate' : returnDate.get(),
-		'totalAmount' : totalAmount.get(),
-		'paymentDate' : paymentDate.get(),
-		'returned' : returned.get(),
+    'startDate' : startDate.get(),
+    'orderDate' : orderDate.get(),
+    'rentalType' : rentalType.get(),
+    'qty' : quantity.get(),
+    'returnDate' : returnDate.get(),
+    'totalAmount' : totalAmount.get(),
+    'paymentDate' : paymentDate.get(),
+    'returned' : returned.get(),
 	})
-
     rentalSubmit_conn.commit() # commit changes
     rentalSubmit_conn.close() # close the DB connection
 
-# outputing rentals just to see if adding new rental worked
-# REMOVE LATER
-def rentalOutput():
-	global rOut
+# --------------------------------------------------------------------
 
-	rOut = Toplevel(rPopup)
-	rOut.title("Rental Output")
-	rOut.geometry("500x500")
+def getRental():
+  global rOut
+
+  rOut = Toplevel(rPopup)
+  rOut.title("Rental Availability")
+  rOut.geometry("300x300")
+
+  getRental_conn = sqlite3.connect('car_rental.db') # connecting to database
+  getRental_cur = getRental_conn.cursor() # cursor
+
+  getRental_cur.execute("""SELECT VehicleID, V.Type, V.Category, startDate, returnDate 
+							FROM Vehicle as V, RENTAL as R 
+							WHERE V.VehicleID = R.VehicleID  
+							AND R.Returned=1 AND startDate = ? AND returnDate = ? AND V.Type = ? AND V.Category = ?; """,
+	(
+		startDate.get(),
+		returnDate.get(), 
+		carType.get(),
+		category.get(),
+	))
+
+  output_records = getRental_cur.fetchall()
+  print_record = ''
+
+  for output in output_records:
+    print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) +"\n"
+
+  getRental_label = Label(rOut, text = print_record)
+  getRental_label.grid(row = 1, column = 1, ipadx = 50, ipady = 35)
+  getRental_conn.commit() # commit changes
+  getRental_conn.close() # close the DB connection
+
+
+# --------------------------------------------------------------------
+
+def rentalOutput():
+  global rOut
+  rOut = Toplevel(rPopup)
+  rOut.title("Rental Output")
+  rOut.geometry("500x500")
 
 	# ---- implementing a scroll bar to be able to see all rentals ----
 
-	mainFrame = Frame(rOut) # creating a main frame
-	mainFrame.pack(fill = BOTH, expand = 1) # similar to grid, just more flexible
+  mainFrame = Frame(rOut) # creating a main frame
+  mainFrame.pack(fill = BOTH, expand = 1) # similar to grid, just more flexible
 	# creating a canvas, can't just place scroll onto a window
-	canvas = Canvas(mainFrame)
-	canvas.pack(side = LEFT, fill = BOTH, expand = 1)
+  canvas = Canvas(mainFrame)
+  canvas.pack(side = LEFT, fill = BOTH, expand = 1)
 	# adding a scroll bar to the canvas
-	scroll = ttk.Scrollbar(mainFrame, orient = VERTICAL, command = canvas.yview)
-	scroll.pack(side = RIGHT, fill = Y)
+  scroll = ttk.Scrollbar(mainFrame, orient = VERTICAL, command = canvas.yview)
+  scroll.pack(side = RIGHT, fill = Y)
 	# configuring canvas
-	canvas.configure(yscrollcommand = scroll.set)
-	canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion = canvas.bbox('all')))
+  canvas.configure(yscrollcommand = scroll.set)
+  canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion = canvas.bbox('all')))
 	# creating second frame inside canvas, this is where output goes
-	secondFrame = Frame(canvas)
+  secondFrame = Frame(canvas)
 	# adding second frame to a window in the canvas
-	canvas.create_window((0,0), window = secondFrame, anchor = "nw")
+  canvas.create_window((0,0), window = secondFrame, anchor = "nw")
   # --------------------------------------------------------------------
 
 	# connecting to database
-	rOut_conn = sqlite3.connect('car_rental.db')
-	rOut_cur = rOut_conn.cursor() # cursor
+  rOut_conn = sqlite3.connect('car_rental.db')
+  rOut_cur = rOut_conn.cursor() # cursor
 	
 	# executing command to output all rentals
-	rOut_cur.execute("SELECT * FROM RENTAL;",)
+  rOut_cur.execute("SELECT * FROM RENTAL;",)
 	# executing command to output type, category, startDate, returnDate JUST TO SEE IF WE CAN CONNECT TO VEHICLES. CURRENTLY WORKS.
 	# rOut_cur.execute("SELECT V.Type, V.Category, startDate, returnDate FROM Vehicle as V, RENTAL as R WHERE V.VehicleID=R.VehicleID;",)
 
-	output_records = rOut_cur.fetchall()
-	print_record = ''
+  output_records = rOut_cur.fetchall()
+  print_record = ''
 	
 	
 	# integers need to be converted to strings before able to be output /  UNCOMMENT TO GET ALL RENTALS AS OUTPUT
-	for output in output_records:
-		print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "   " + str(output[5]) + "   " + str(output[6]) + "   " + str(output[7]) + "   " + str(output[8]) + "   " + str(output[9]) +  "\n"
-	# for output in output_records:
-	# 	print_record += str(output[0])+ "   " + str(output[1])  + "   " + str(output[2]) + "   " + str(output[3])+  "\n"
-
-	rOut_label = Label(secondFrame, text = print_record)
-	rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 140)
-
-	rOut_conn.commit() # commit changes
-	rOut_conn.close() # close the DB connection
-
+  for output in output_records:
+    print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "   " + str(output[5]) + "   " + str(output[6]) + "   " + str(output[7]) + "   " + str(output[8]) + "   " + str(output[9]) +  "\n"
+  rOut_label=Label(secondFrame, text=print_record)
+  rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 140)
+  rOut_conn.commit()
+  rOut_conn.close() # close the DB connection
+  
 
 # ------------------------------------------- RETURN CAR --------------------------------------------
 def returnCar():
