@@ -70,6 +70,8 @@ QUERY 5:
         ○ IN THE CASE THAT USER PROVIDES NO FILTERS, ORDER THE RESULTS BASED ON AVERAGE DAILY PRICE
         
         Search idea : https://pythonguides.com/python-tkinter-search-box/
+                      https://stackoverflow.com/questions/42654801/python-script-to-search-and-display-data-from-sqlite-database-and-result-formate
+                      
 /* ======================================================================= */
         
         
