@@ -324,7 +324,7 @@ def rentalSubmit():
     rentalSubmit_cur.execute("INSERT INTO RENTAL VALUES (:CustID, :VehicleID, :startDate, :orderDate, :rentalType, :qty, :returnDate, :totalAmount, :paymentDate, :returned) ",
 	{ 
     'CustID': custID.get(),
-		'VehicleID': vehicleID.get(), 
+	'VehicleID': vehicleID.get(), 
     'startDate' : startDate.get(),
     'orderDate' : orderDate.get(),
     'rentalType' : rentalType.get(),
@@ -379,7 +379,7 @@ def rentalOutput():
   rOut = Toplevel(rPopup)
   rOut.title("Rental Output")
   rOut.geometry("500x500")
-
+  
 	# ---- implementing a scroll bar to be able to see all rentals ----
 
   mainFrame = Frame(rOut) # creating a main frame
