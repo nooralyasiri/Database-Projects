@@ -654,16 +654,40 @@ def UpdateRentals():
 
 # ------------------------------------------- CUSTOMER SEARCH ---------------------------------------------
 
-# Testing out treeview, trying to get remaining balance
-# Search implementation after; scroll wheel to see all customers!
-def custSearch():
+def custData():
 	global csPopup
+	global custTree
 	csPopup = Toplevel(root) # creating new window from root
 	csPopup.title("Customer Database")
-	csPopup.geometry("800x800")
+	csPopup.geometry("400x400")
 
 	# -------------------------------- creating treeview --------------------------------
-	custTree = ttk.Treeview(csPopup)
+	# adding colors and style to view
+	style = ttk.Style()
+	style.theme_use("default")
+	style.configure("Treeview",
+		background = "white",
+		rowheight = 25,
+		fieldbackground = "#e0e0e0")
+	# selection color
+	style.map('Treeview',
+		background=[('selected', 'lightblue')])
+
+	# treeview frame
+	treeframe = Frame(csPopup)
+	treeframe.pack(pady = 20)
+
+	# treeview scrollbar
+	treescroll = Scrollbar(treeframe)
+	treescroll.pack(side = RIGHT, fill = Y)
+
+	# creating treeview in frame
+	custTree = ttk.Treeview(treeframe, yscrollcommand = treescroll.set, selectmode = 'browse')
+	custTree.pack()
+
+	# scrollbar configuration
+	treescroll.config(command = custTree.yview)
+
 	# defining columns
 	custTree['columns'] = ("ID", "Name", "Remaining Balance")
 
@@ -671,13 +695,13 @@ def custSearch():
 	custTree.column("#0", width = 0, stretch = NO)
 	custTree.column("ID", anchor = CENTER, width = 100)
 	custTree.column("Name", anchor = CENTER, width = 100)
-	#custTree.column("Remaining Balance", anchor = CENTER, width = 150)
+	custTree.column("Remaining Balance", anchor = CENTER, width = 150)
 
 	# headings
 	custTree.heading("#0", text = "", anchor = W)
 	custTree.heading("ID", text = "Customer ID", anchor = CENTER)
 	custTree.heading("Name", text = "Name", anchor = CENTER)
-	#custTree.heading("Remaining Balance", text = "Remaining Balance", anchor = CENTER)
+	custTree.heading("Remaining Balance", text = "Remaining Balance", anchor = CENTER)
 	# -------------------------------------------------------------------------------------
 
 	#connect to database
@@ -685,31 +709,257 @@ def custSearch():
 	custSearch_cur = custSearch_conn.cursor() # cursor
 
 	# Adding data to view
-	custSearch_cur.execute("SELECT custID, Name FROM CUSTOMER;")
+	custSearch_cur.execute("""SELECT custID, Name,
+								CASE 
+									WHEN RentalBalance IS NULL THEN '0'
+									ELSE SUM(RentalBalance)
+								END AS RemainingBalance
+								FROM CUSTOMER
+								LEFT JOIN VRENTALINFO
+								ON CustomerID = custID
+								GROUP BY custID;""")
 	output_records = custSearch_cur.fetchall()
 	
+	custTree.tag_configure('odd', background = "white")
+	custTree.tag_configure('even', background = "lightblue")
+
 	count = 0
 	for output in output_records:
-		custTree.insert(parent = '', index = 'end', iid = count, text = "", values = (str(output[0]), output[1]))
+		if count % 2 == 0:
+			custTree.insert(parent = '', index = 'end', iid = count, text = "", values = (str(output[0]), output[1], '$' + str(output[2]) + '.00'), tags = ('even',))
+		else:
+			custTree.insert(parent = '', index = 'end', iid = count, text = "", values = (str(output[0]), output[1], '$' + str(output[2]) + '.00'), tags = ('odd',))
 		count += 1
 
-	custTree.pack(pady = 20)
+	
+	# button
+	search_btn = Button(csPopup, text = 'Search', command = custSearchInput)
+	search_btn.pack(pady = 20, padx = 30, ipadx = 100)
 		
 		
+def custSearchInput():
+	global cSearch
+	global sentryID
+	global sentryName
+	cSearch = Toplevel(root)
+	cSearch.title("Search Customer Database")
+	cSearch.geometry("400x300")
+
+	# create label frame
+	sframeID = LabelFrame(cSearch, text = "Customer ID")
+	sframeID.pack(padx = 10, pady = 10)
+	# text box
+	sentryID = Entry(sframeID)
+	sentryID.pack(pady = 20, padx = 20)
+
+	# create label frame
+	sframeName = LabelFrame(cSearch, text = "Customer Name")
+	sframeName.pack(padx = 10, pady = 10)
+	# text box
+	sentryName = Entry(sframeName)
+	sentryName.pack(pady = 20, padx = 20)
+
+	# button
+	sbtn = Button(cSearch, text = 'Search Database', command = custSearch)
+	sbtn.pack(pady = 20, padx = 20)
+
+
+def custSearch():
+	global record
+	if sentryName.get():
+		record = sentryName.get()
+		cSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in custTree.get_children():
+			custTree.delete(r)
+
+		conn = sqlite3.connect('car_rental.db')
+		cur = conn.cursor()
+
+		cur.execute("""SELECT custID, Name,
+						CASE 
+							WHEN RentalBalance IS NULL THEN 0
+							ELSE SUM(RentalBalance)
+						END AS RemainingBalance
+						FROM CUSTOMER
+						LEFT JOIN VRENTALINFO
+						ON CustomerID = custID
+						WHERE Name like ?
+						GROUP BY custID; """, ('%' + record + '%',))
+		
+		output_records = cur.fetchall()
+	
+	elif sentryID.get():
+		record = sentryID.get()
+		cSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in custTree.get_children():
+			custTree.delete(r)
+
+		conn = sqlite3.connect('car_rental.db')
+		cur = conn.cursor()
+
+		cur.execute("""SELECT custID, Name,
+						CASE 
+							WHEN RentalBalance IS NULL THEN 0
+							ELSE SUM(RentalBalance)
+						END AS RemainingBalance
+						FROM CUSTOMER
+						LEFT JOIN VRENTALINFO
+						ON CustomerID = custID
+						WHERE custID = ?
+						GROUP BY custID; """, (record,))
+		
+		output_records = cur.fetchall()
+
+	elif not sentryName.get() and not sentryID.get():
+
+		cSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in custTree.get_children():
+			custTree.delete(r)
+
+		conn = sqlite3.connect('car_rental.db')
+		cur = conn.cursor()
+
+		cur.execute("""SELECT custID, Name,
+						CASE 
+							WHEN RentalBalance IS NULL THEN 0
+							ELSE SUM(RentalBalance)
+						END AS RemainingBalance
+						FROM CUSTOMER
+						LEFT JOIN VRENTALINFO
+						ON CustomerID = custID
+						GROUP BY custID
+						ORDER BY RemainingBalance DESC; """,)
+		
+		output_records = cur.fetchall()
+		
+
+
+	count = 0
+	for output in output_records:
+		if count % 2 == 0:
+			custTree.insert(parent = '', index = 'end', iid = count, text = "", values = (str(output[0]), output[1], '$' + str(output[2]) + '.00'), tags = ('even',))
+		else:
+			custTree.insert(parent = '', index = 'end', iid = count, text = "", values = (str(output[0]), output[1], '$' + str(output[2]) + '.00'), tags = ('odd',))
+		count += 1
+
+	conn.commit()
+	conn.close()
+
 # ------------------------------------------- Vehicle SEARCH ---------------------------------------------
 
-def vehicleSearch():
-    global vsPopup
-    vsPopup = Toplevel(root) # creating new window from root
-    vsPopup.title("Vehicle Database")
-    vsPopup.geometry("800x800")
+def vData():
+	global vsPopup
+	global vtree
+	vsPopup = Toplevel(root)
+	vsPopup.title("Vehicle Database")
+	vsPopup.geometry("500x400")
 	
-    	#Query
-    	#SELECT VehicleID AS VIN, Description, AVG(Daily) AS 'Daily Rate'
-	#FROM Vehicle as V, Rate as R
-	#WHERE V.Type = R.Type
-	#GROUP BY VehicleID
-	#ORDER BY AVG(Daily) ASC;
+	style = ttk.Style()
+	style.theme_use("default")
+	style.configure("Treeview",
+		background = "white",
+		rowheight = 25,
+		fieldbackground = "#e0e0e0")
+	# selection color
+	style.map('Treeview',
+		background=[('selected', 'lightblue')])
+
+	# treeview frame
+	treeframe = Frame(vsPopup)
+	treeframe.pack(pady = 20)
+
+	# treeview scrollbar
+	treescroll = Scrollbar(treeframe)
+	treescroll.pack(side = RIGHT, fill = Y)
+
+	# creating treeview in frame
+	vtree = ttk.Treeview(treeframe, yscrollcommand = treescroll.set, selectmode = 'browse')
+	vtree.pack()
+
+	# scrollbar configuration
+	treescroll.config(command = vtree.yview)
+
+	# defining columns
+	vtree['columns'] = ("VID", "Desc", "Avg")
+
+	# formatting columns
+	vtree.column("#0", width = 0, stretch = NO)
+	vtree.column("VID", anchor = CENTER, width = 140)
+	vtree.column("Desc", anchor = CENTER, width = 140)
+	vtree.column("Avg", anchor = CENTER, width = 130)
+
+	# headings
+	vtree.heading("#0", text = "", anchor = W)
+	vtree.heading("VID", text = "VIN", anchor = CENTER)
+	vtree.heading("Desc", text = "Description", anchor = CENTER)
+	vtree.heading("Avg", text = "Avg Daily Price", anchor = CENTER)
+	# -------------------------------------------------------------------------------------
+
+	#connect to database
+	vSearch_conn = sqlite3.connect('car_rental.db') # connecting to database
+	vSearch_cur = vSearch_conn.cursor() # cursor
+
+	# Adding data to view
+	# QUERY NEEDED TO PULL VEHICLE DATA (REPLACE THE QUERY INSIDE)
+	# vSearch_cur.execute("""SELECT VehicleID, Description, AVG(Daily)
+	# 							FROM Vehicle as V, Rate as R
+	# 							WHERE V.Type = R.Type
+	# 							GROUP BY VehicleID
+	# 							ORDER BY AVG(Daily) ASC;""")
+	output_records = vSearch_cur.fetchall()
+	
+	vtree.tag_configure('odd', background = "white")
+	vtree.tag_configure('even', background = "lightblue")
+
+	count = 0
+	for output in output_records:
+		if count % 2 == 0:
+			vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2])), tags = ('even',))
+		else:
+			vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2]) ), tags = ('odd',))
+		count += 1
+
+	
+	# button
+	search_btn = Button(vsPopup, text = 'Search', command = vSearchInput)
+	search_btn.pack(pady = 20, padx = 30, ipadx = 100)
+
+
+def vSearchInput():
+	global vSearch
+	global ventryID
+	global ventryName
+	vSearch = Toplevel(root)
+	vSearch.title("Search Vehicle Database")
+	vSearch.geometry("400x275")
+
+	# create label frame
+	vframeVIN = LabelFrame(vSearch, text = "VIN")
+	vframeVIN.pack(padx = 10, pady = 10)
+	# text box
+	ventryVIN = Entry(vframeVIN)
+	ventryVIN.pack(pady = 20, padx = 20)
+
+	# create label frame
+	vframeDesc = LabelFrame(vSearch, text = "Description")
+	vframeDesc.pack(padx = 10, pady = 10)
+	# text box
+	ventryDesc = Entry(vframeDesc)
+	ventryDesc.pack(pady = 20, padx = 20)
+
+	# button
+	sbtn = Button(vSearch, text = 'Search Database', command = vSearch)
+	sbtn.pack(pady = 20, padx = 20)
+
+
+def vSearch():
+	global vSearch
 
 # ----------------------------------------- END OF FUNCTIONS -----------------------------------------
 
@@ -727,10 +977,10 @@ rentalButton.pack(pady = 10)
 returnButton = Button(root, text = "Return Car Rental", command = returnCar)
 returnButton.pack(pady = 10)
 
-returnButton = Button(root, text = "Customer Search", command = custSearch)
+returnButton = Button(root, text = "Customer Search", command = custData)
 returnButton.pack(pady = 10)
 
-returnButton = Button(root, text = "Vehicle Search", command = vehicleSearch)
+returnButton = Button(root, text = "Vehicle Search", command = vData)
 returnButton.pack(pady = 10)
 
 
