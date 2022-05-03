@@ -703,6 +703,13 @@ def vehicleSearch():
     vsPopup = Toplevel(root) # creating new window from root
     vsPopup.title("Vehicle Database")
     vsPopup.geometry("800x800")
+	
+    	#Query
+    	#SELECT VehicleID AS VIN, Description, AVG(Daily) AS 'Daily Rate'
+	#FROM Vehicle as V, Rate as R
+	#WHERE V.Type = R.Type
+	#GROUP BY VehicleID
+	#ORDER BY AVG(Daily) ASC;
 
 # ----------------------------------------- END OF FUNCTIONS -----------------------------------------
 
