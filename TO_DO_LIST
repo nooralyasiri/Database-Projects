@@ -69,7 +69,7 @@ QUERY 5:
         ○ MAKE SURE QUERY RETURNS MEANINGFUL ATTRIBUTE NAMES 
         ○ IN THE CASE THAT USER PROVIDES NO FILTERS, ORDER THE RESULTS BASED ON AVERAGE DAILY PRICE
         
-        
+        Search idea : https://pythonguides.com/python-tkinter-search-box/
 /* ======================================================================= */
         
         
