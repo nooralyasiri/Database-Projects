@@ -912,6 +912,20 @@ def vData():
 	# 							WHERE V.Type = R.Type
 	# 							GROUP BY VehicleID
 	# 							ORDER BY AVG(Daily) ASC;""")
+	
+	#---------------------------------------------------------------------------------
+	# new query attempt not sure if its right 
+	#SELECT VehicleID as VIN, Description,
+	#				CASE 
+	#					WHEN OrderAmount IS NULL THEN 'Non-Applicable'
+	#					ELSE OrderAmount/TotalDays
+	#				END AS 'Daily Rate'
+	#				FROM VEHICLE as V
+	#				LEFT JOIN VRENTALINFO as VI
+	#				ON V.VehicleID = VI.VIN
+	#				GROUP BY VehicleID
+	#				ORDER BY 'Daily Rate' ASC;
+
 	output_records = vSearch_cur.fetchall()
 	
 	vtree.tag_configure('odd', background = "white")
