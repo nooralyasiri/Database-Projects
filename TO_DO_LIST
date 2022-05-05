@@ -57,9 +57,6 @@ QUERY 5:
         ○ USER HAS THE RIGHT TO SEARCH BY: CustID, Customer Name, PART OF Name, OR Run the query with NO filters/criteria.
         ○ IN THE CASE THAT USER PROVIDES NO FILTERS, ORDER THE RESULTS BASED ON BALANCE AMOUNT
      
-     -- STATUS: COMPLETE
-     -- FIX SEARCH FOR MULTI SEARCH IF TIME
-     
      • PART B
         ○ FOR EVERY VEHICLE, LIST: VIN, Description, Average DAILY Price
         ○ USER HAS THE RIGHT TO SEARCH BY: VIN, Description, Part of Description, OR Run the query with NO filters/criteria.
@@ -70,6 +67,8 @@ QUERY 5:
         ○ FOR VEHICLES THAT DO NOT HAVE ANY RENTALS: SUBSTITUTE 'NULL' VALUE WITH 'Non-Applicable' TEXT 
         ○ MAKE SURE QUERY RETURNS MEANINGFUL ATTRIBUTE NAMES 
         ○ IN THE CASE THAT USER PROVIDES NO FILTERS, ORDER THE RESULTS BASED ON AVERAGE DAILY PRICE
+        
+-- STATUS: BOTH COMPLETE
         
                       
 /* ======================================================================= */
