@@ -918,7 +918,7 @@ def vData():
 	#SELECT VehicleID as VIN, Description,
 	#				CASE 
 	#					WHEN OrderAmount IS NULL THEN 'Non-Applicable'
-	#					ELSE OrderAmount/TotalDays
+	#					ELSE printf("%.2f", OrderAmount/TotalDays)
 	#				END AS 'Daily Rate'
 	#				FROM VEHICLE as V
 	#				LEFT JOIN VRENTALINFO as VI
