@@ -765,9 +765,10 @@ def custSearchInput():
 
 
 def custSearch():
-	global record
-	if sentryName.get():
-		record = sentryName.get()
+	
+	if sentryID.get() and sentryName.get():
+		record1 = sentryID.get()
+		record2 = sentryName.get()
 		cSearch.destroy() # closes search box
 
 		# clear treeview
@@ -785,11 +786,12 @@ def custSearch():
 						FROM CUSTOMER
 						LEFT JOIN VRENTALINFO
 						ON CustomerID = custID
-						WHERE Name like ?
-						GROUP BY custID; """, ('%' + record + '%',))
+						WHERE custID = ?
+						AND Name like ?
+						GROUP BY custID; """, (record1, '%' + record2 + '%',))
 		
 		output_records = cur.fetchall()
-	
+
 	elif sentryID.get():
 		record = sentryID.get()
 		cSearch.destroy() # closes search box
@@ -811,6 +813,30 @@ def custSearch():
 						ON CustomerID = custID
 						WHERE custID = ?
 						GROUP BY custID; """, (record,))
+		
+		output_records = cur.fetchall()
+
+	elif sentryName.get():
+		record = sentryName.get()
+		cSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in custTree.get_children():
+			custTree.delete(r)
+
+		conn = sqlite3.connect('car_rental.db')
+		cur = conn.cursor()
+
+		cur.execute("""SELECT custID, Name,
+						CASE 
+							WHEN RentalBalance IS NULL THEN 0
+							ELSE SUM(RentalBalance)
+						END AS RemainingBalance
+						FROM CUSTOMER
+						LEFT JOIN VRENTALINFO
+						ON CustomerID = custID
+						WHERE Name like ?
+						GROUP BY custID; """, ('%' + record + '%',))
 		
 		output_records = cur.fetchall()
 
@@ -906,37 +932,35 @@ def vData():
 	vSearch_cur = vSearch_conn.cursor() # cursor
 
 	# Adding data to view
-	# QUERY NEEDED TO PULL VEHICLE DATA (REPLACE THE QUERY INSIDE)
-	# vSearch_cur.execute("""SELECT VehicleID, Description, AVG(Daily)
-	# 							FROM Vehicle as V, Rate as R
-	# 							WHERE V.Type = R.Type
-	# 							GROUP BY VehicleID
-	# 							ORDER BY AVG(Daily) ASC;""")
-	
-	#---------------------------------------------------------------------------------
-	# new query attempt not sure if its right 
-	#SELECT VehicleID as VIN, Description,
-	#				CASE 
-	#					WHEN OrderAmount IS NULL THEN 'Non-Applicable'
-	#					ELSE printf("%.2f", OrderAmount/TotalDays)
-	#				END AS 'Daily Rate'
-	#				FROM VEHICLE as V
-	#				LEFT JOIN VRENTALINFO as VI
-	#				ON V.VehicleID = VI.VIN
-	#				GROUP BY VehicleID
-	#				ORDER BY 'Daily Rate' ASC;
+	vSearch_cur.execute("""SELECT VehicleID as VIN, Description,
+								CASE 
+									WHEN OrderAmount IS NULL THEN 'Non-Applicable'
+									ELSE OrderAmount/TotalDays
+								END AS 'Daily Rate'
+							FROM VEHICLE as V
+							LEFT JOIN VRENTALINFO as VI
+							ON V.VehicleID = VI.VIN
+							GROUP BY VehicleID;""")
 
 	output_records = vSearch_cur.fetchall()
-	
+
 	vtree.tag_configure('odd', background = "white")
 	vtree.tag_configure('even', background = "lightblue")
 
 	count = 0
 	for output in output_records:
 		if count % 2 == 0:
-			vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2])), tags = ('even',))
+			if type(output[2]) == float:
+				out2 = format(float(output[2]),'.2f')
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], '$' + str(out2)), tags = ('even',))
+			else:
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2])), tags = ('even',))
 		else:
-			vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2]) ), tags = ('odd',))
+			if type(output[2]) == float:
+				out2 = format(float(output[2]),'.2f')
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], '$' + str(out2)), tags = ('odd',))
+			else:
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2])), tags = ('odd',))
 		count += 1
 
 	
@@ -947,8 +971,8 @@ def vData():
 
 def vSearchInput():
 	global vSearch
-	global ventryID
-	global ventryName
+	global ventryVIN
+	global ventryDesc
 	vSearch = Toplevel(root)
 	vSearch.title("Search Vehicle Database")
 	vSearch.geometry("400x275")
@@ -968,12 +992,133 @@ def vSearchInput():
 	ventryDesc.pack(pady = 20, padx = 20)
 
 	# button
-	sbtn = Button(vSearch, text = 'Search Database', command = vSearch)
+	sbtn = Button(vSearch, text = 'Search Database', command = vehicleSearch)
 	sbtn.pack(pady = 20, padx = 20)
 
 
-def vSearch():
-	global vSearch
+def vehicleSearch():
+
+	if ventryVIN.get() and ventryDesc.get():
+		record1 = ventryVIN.get()
+		record2 = ventryDesc.get()
+		vSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in vtree.get_children():
+			vtree.delete(r)
+
+		vconn = sqlite3.connect('car_rental.db')
+		vcur = vconn.cursor()
+
+		vcur.execute("""SELECT VehicleID as VIN, Description,
+							CASE 
+								WHEN OrderAmount IS NULL THEN 'Non-Applicable'
+								ELSE OrderAmount/TotalDays
+							END AS DailyRate
+						FROM VEHICLE as V
+						LEFT JOIN VRENTALINFO as VI
+						ON V.VehicleID = VI.VIN
+						WHERE V.VehicleID = ?
+						AND Description like ?
+						GROUP BY VehicleID; """, (record1, '%' + record2 + '%',))
+		
+		output_records = vcur.fetchall()
+
+	elif ventryVIN.get():
+		record = ventryVIN.get()
+		vSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in vtree.get_children():
+			vtree.delete(r)
+
+		vconn = sqlite3.connect('car_rental.db')
+		vcur = vconn.cursor()
+
+		vcur.execute("""SELECT VehicleID as VIN, Description,
+							CASE 
+								WHEN OrderAmount IS NULL THEN 'Non-Applicable'
+								ELSE OrderAmount/TotalDays
+							END AS DailyRate
+						FROM VEHICLE as V
+						LEFT JOIN VRENTALINFO as VI
+						ON V.VehicleID = VI.VIN
+						WHERE V.VehicleID = ?
+						GROUP BY VehicleID;""", (record,))
+		
+		output_records = vcur.fetchall()
+	
+	elif ventryDesc.get():
+		record = ventryDesc.get()
+		vSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in vtree.get_children():
+			vtree.delete(r)
+
+		vconn = sqlite3.connect('car_rental.db')
+		vcur = vconn.cursor()
+
+		vcur.execute("""SELECT VehicleID as VIN, Description,
+							CASE 
+								WHEN OrderAmount IS NULL THEN 'Non-Applicable'
+								ELSE OrderAmount/TotalDays
+							END AS DailyRate
+						FROM VEHICLE as V
+						LEFT JOIN VRENTALINFO as VI
+						ON V.VehicleID = VI.VIN
+						WHERE Description like ?
+						GROUP BY VehicleID """, ('%' + record + '%',))
+		
+		output_records = vcur.fetchall()
+
+	elif not ventryVIN.get() and not ventryDesc.get():
+
+		vSearch.destroy() # closes search box
+
+		# clear treeview
+		for r in vtree.get_children():
+			vtree.delete(r)
+
+		vconn = sqlite3.connect('car_rental.db')
+		vcur = vconn.cursor()
+
+		vcur.execute("""SELECT VehicleID as VIN, Description,
+							CASE 
+								WHEN OrderAmount IS NULL THEN 'Non-Applicable'
+								ELSE OrderAmount/TotalDays
+							END AS DailyRate
+						FROM VEHICLE as V
+						LEFT JOIN VRENTALINFO as VI
+						ON V.VehicleID = VI.VIN
+						GROUP BY VehicleID
+						ORDER BY 
+								CASE
+									WHEN DailyRate like '[a-z]%' THEN 1
+									ELSE 0
+								END, DailyRate ASC;""",)
+		
+		output_records = vcur.fetchall()
+		
+
+	count = 0
+	for output in output_records:
+		if count % 2 == 0:
+			if type(output[2]) == float:
+				out2 = format(float(output[2]),'.2f')
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], '$' + str(out2)), tags = ('even',))
+			else:
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2])), tags = ('even',))
+		else:
+			if type(output[2]) == float:
+				out2 = format(float(output[2]),'.2f')
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], '$' + str(out2)), tags = ('odd',))
+			else:
+				vtree.insert(parent = '', index = 'end', iid = count, text = "", values = (output[0], output[1], str(output[2])), tags = ('odd',))
+		count += 1
+
+	vconn.commit()
+	vconn.close()
 
 # ----------------------------------------- END OF FUNCTIONS -----------------------------------------
 
