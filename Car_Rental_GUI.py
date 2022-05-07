@@ -231,10 +231,13 @@ def addRental():
     global totalAmount
     global paymentDate 
     global returned 
+    # -- 
+    global carType 
+    global category
 
     rPopup = Toplevel(root) # creating new window from root
     rPopup.title("New Rental")
-    rPopup.geometry("450x600")
+    rPopup.geometry("450x800")
 
     # ---------------------- TEXT BOXES AND LABELS ----------------------
 
@@ -309,10 +312,22 @@ def addRental():
     output_btn.grid(row = 11, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
 
     # -------------------------------------------------------------------
+
+    carType = Entry(rPopup, width = 30)
+    carType.grid(row = 12, column = 1)
+    carType_label = Label(rPopup, text = 'Car Type: ')
+    carType_label.grid(row = 12, column = 0, pady = 10)
+
+    category = Entry(rPopup, width = 30)
+    category.grid(row = 13, column = 1)
+    category_label = Label(rPopup, text = 'Category: ')
+    category_label.grid(row = 13, column = 0, pady = 10)
+
+    # -------------------------------------------------------------------
     # output selected rentals 
 
     check_btn = Button(rPopup, text = 'Output Selected Rentals', command = getRental)
-    check_btn.grid(row = 13, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
+    check_btn.grid(row = 14, column = 0, columnspan = 2, pady = 10, padx = 10, ipadx = 120)
 
     # -------------------------------------------------------------------
 
@@ -324,7 +339,7 @@ def rentalSubmit():
     rentalSubmit_cur.execute("INSERT INTO RENTAL VALUES (:CustID, :VehicleID, :startDate, :orderDate, :rentalType, :qty, :returnDate, :totalAmount, :paymentDate, :returned) ",
 	{ 
     'CustID': custID.get(),
-	'VehicleID': vehicleID.get(), 
+		'VehicleID': vehicleID.get(), 
     'startDate' : startDate.get(),
     'orderDate' : orderDate.get(),
     'rentalType' : rentalType.get(),
@@ -344,19 +359,22 @@ def getRental():
 
   rOut = Toplevel(rPopup)
   rOut.title("Rental Availability")
-  rOut.geometry("300x300")
+  rOut.geometry("400x400")
 
   getRental_conn = sqlite3.connect('car_rental.db') # connecting to database
   getRental_cur = getRental_conn.cursor() # cursor
 
-  getRental_cur.execute("""SELECT VehicleID, V.Type, V.Category, startDate, returnDate 
+  getRental_cur.execute("""SELECT V.VehicleID, V.Type, V.Category, startDate, returnDate 
 							FROM Vehicle as V, RENTAL as R 
 							WHERE V.VehicleID = R.VehicleID  
-							AND R.Returned=1 AND startDate = ? AND returnDate = ? AND V.Type = ? AND V.Category = ?; """,
+							AND R.Returned=1 AND (R.startDate NOT BETWEEN ? AND ?) AND (R.returnDate NOT BETWEEN ? AND ?)
+              AND V.Type = ? AND V.Category = ?; """,
 	(
+    returned.get(),
+    vehicleID.get(),
 		startDate.get(),
 		returnDate.get(), 
-		carType.get(),
+    carType.get(),
 		category.get(),
 	))
 
@@ -378,8 +396,8 @@ def rentalOutput():
   global rOut
   rOut = Toplevel(rPopup)
   rOut.title("Rental Output")
-  rOut.geometry("500x500")
-  
+  rOut.geometry("900x600")
+
 	# ---- implementing a scroll bar to be able to see all rentals ----
 
   mainFrame = Frame(rOut) # creating a main frame
@@ -405,8 +423,6 @@ def rentalOutput():
 	
 	# executing command to output all rentals
   rOut_cur.execute("SELECT * FROM RENTAL;",)
-	# executing command to output type, category, startDate, returnDate JUST TO SEE IF WE CAN CONNECT TO VEHICLES. CURRENTLY WORKS.
-	# rOut_cur.execute("SELECT V.Type, V.Category, startDate, returnDate FROM Vehicle as V, RENTAL as R WHERE V.VehicleID=R.VehicleID;",)
 
   output_records = rOut_cur.fetchall()
   print_record = ''
@@ -419,6 +435,7 @@ def rentalOutput():
   rOut_label.grid(row = 1, column = 0, columnspan = 2, padx = 140)
   rOut_conn.commit()
   rOut_conn.close() # close the DB connection
+  
   
 
 # ------------------------------------------- RETURN CAR --------------------------------------------
