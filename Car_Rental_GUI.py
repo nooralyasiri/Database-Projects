@@ -368,26 +368,27 @@ def getRental():
 							FROM Vehicle as V, RENTAL as R 
 							WHERE V.VehicleID = R.VehicleID  
 							AND R.Returned=1 AND (R.startDate NOT BETWEEN ? AND ?) AND (R.returnDate NOT BETWEEN ? AND ?)
-              AND V.Type = ? AND V.Category = ?; """,
+              						AND V.Type = ? AND V.Category = ?; """,
 	(
     returned.get(),
     vehicleID.get(),
-		startDate.get(),
-		returnDate.get(), 
+    startDate.get(),
+    returnDate.get(), 
     carType.get(),
-		category.get(),
+    category.get(),
 	))
 
   output_records = getRental_cur.fetchall()
   print_record = ''
 
   for output in output_records:
-    print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) +"\n"
+    print_record += str(output[0])+ "   " + str(output[1]) +  "   " + str(output[2]) + "   " + str(output[3]) + "   " + str(output[4]) + "\n"
 
   getRental_label = Label(rOut, text = print_record)
   getRental_label.grid(row = 1, column = 1, ipadx = 50, ipady = 35)
   getRental_conn.commit() # commit changes
   getRental_conn.close() # close the DB connection
+
 
 
 # --------------------------------------------------------------------
