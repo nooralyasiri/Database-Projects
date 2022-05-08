@@ -463,7 +463,7 @@ def returnCar():
 	# customer name (find a way to link name with id)
 	custName = Entry(returnPopup, width = 30) 
 	custName.grid(row = 1, column = 1) 
-	custName_label = Label(returnPopup, text = 'Name : ') 
+	custName_label = Label(returnPopup, text = 'Name: ') 
 	custName_label.grid(row = 1, column = 0, pady = 10) 
 
 	# vehicle id
