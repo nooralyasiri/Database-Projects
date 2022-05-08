@@ -1148,7 +1148,7 @@ custButton.pack(pady = 10)
 vehicleButton = Button(root, text = "Add Vehicle", command = addVehicle)
 vehicleButton.pack(pady = 10)
 
-rentalButton = Button(root, text = "Add Car Rental Reservation", command = addRental)
+rentalButton = Button(root, text = "Add/Search Car Rental Reservation", command = addRental)
 rentalButton.pack(pady = 10)
 
 returnButton = Button(root, text = "Return Car Rental", command = returnCar)
