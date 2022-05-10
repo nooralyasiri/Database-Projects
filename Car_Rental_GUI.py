@@ -543,7 +543,7 @@ def getRentals():
 			print_record += "Amount due: $" + str(output[0]) + "\n"
 		# if customer has already paid
 		elif(output[1] is not None):
-			print_record += "Amount due: $0 \n"
+			print_record += "Amount due: $0.00 \n"
 
 	getRentals_label = Label(getOut, text = print_record)
 	getRentals_label.grid(row = 1, column = 1, ipadx = 50, ipady = 35)
